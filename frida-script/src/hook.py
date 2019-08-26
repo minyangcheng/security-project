@@ -23,7 +23,7 @@ def on_message(message, data):
         print(message)
 
 
-scriptNames = ['hook.js', 'tool.js']
+scriptNames = ['qu_tou_tiao.js', 'tool.js']
 scriptCodes = []
 for path in scriptNames:
     scriptPath = os.path.join(os.path.abspath('./src/script'), path)
@@ -33,11 +33,11 @@ for path in scriptNames:
         scriptCodes.append(code)
 
 completeCode = '\n'.join(scriptCodes)
-packageName = 'com.min.ndk.sample'
+packageName = 'com.jifen.qukan'
 device = frida.get_usb_device()
 
 print('[*] Running Hook')
-runType = 2
+runType = 1
 if runType == 1:
     process = device.attach(packageName)
     script = process.create_script(completeCode)
