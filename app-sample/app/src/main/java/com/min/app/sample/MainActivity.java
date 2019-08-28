@@ -5,8 +5,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.EditText;
 
-import java.util.Enumeration;
-
 public class MainActivity extends AppCompatActivity {
 
     private EditText mUserNameEt;
@@ -56,7 +54,6 @@ public class MainActivity extends AppCompatActivity {
                 }, 2000);
             }
         });
-        new Enumeration()
     }
 
     private void fillDataToView() {
@@ -82,7 +79,6 @@ public class MainActivity extends AppCompatActivity {
 
     public void sayHello(User array[]) {
         Utils.showToast(this, array[0] + ":" + array[1]);
-//        EnumerateClass.loadAllClass(getClassLoader());
     }
 
     public void sayHello(User user) {

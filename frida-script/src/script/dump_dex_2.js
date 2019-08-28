@@ -40,7 +40,7 @@ if(Java.available) {
 				// var result = this.attach(context);
         this.attachBaseContext(context);
         console.log("find application :",this);
-        if(this.toString().indexOf('com.min.ndk.sample')<0){
+        if(this.toString().indexOf('com.min.app.sample')<0){
           return;
         }
 				var classloader = context.getClassLoader();

@@ -4,7 +4,7 @@ import sys
 
 import frida
 
-logPath = os.path.join(os.path.abspath('../'), 'hook.log')
+logPath = os.path.join(os.path.abspath('.'), 'hook.log')
 
 
 def write_log(str):
@@ -33,7 +33,7 @@ for path in scriptNames:
         scriptCodes.append(code)
 
 completeCode = '\n'.join(scriptCodes)
-packageName = 'com.jifen.qukan'
+packageName = 'com.min.app.sample'
 device = frida.get_usb_device()
 
 print('[*] Running Hook')

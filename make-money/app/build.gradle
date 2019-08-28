@@ -1,0 +1,175 @@
+apply plugin: 'com.android.application'
+
+def VERSION_NAME = '1.0.0.0'
+
+android {
+    compileSdkVersion 27
+    buildToolsVersion "27.0.3"
+
+    signingConfigs {
+        release {
+            keyAlias "minych"
+            keyPassword "123456"
+            storeFile file("../keystores/minych.jks")
+            storePassword "123456"
+        }
+    }
+
+    defaultConfig {
+        applicationId "com.min.money"
+        minSdkVersion 19
+        targetSdkVersion 27
+        versionCode getVersionCodeByName(VERSION_NAME)
+        versionName VERSION_NAME
+
+        flavorDimensions "default"
+        ndk {
+            abiFilters "armeabi", "armeabi-v7a"
+        }
+
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+
+        buildConfigField 'String', 'BUILD_HOST', "\"${buildHost()}\""
+        buildConfigField 'String', 'BUILD_TIME', "\"${buildTime()}\""
+        buildConfigField 'String', 'GIT_VERSION', "\"${getGitVersion()}\""
+
+        buildConfigField 'String', 'API_SERVER_URL', '"http://test.com/"'
+        buildConfigField "String", "APP_SELF_UPDATE_URL", '"http://test.com"'
+
+        manifestPlaceholders = [
+                'APP_NAME': '@string/app_name',
+        ]
+    }
+
+    buildTypes {
+        debug {
+            debuggable true
+            minifyEnabled false
+            zipAlignEnabled false
+            shrinkResources false
+            signingConfig signingConfigs.release
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+        release {
+            debuggable false
+            minifyEnabled false
+            zipAlignEnabled true
+            shrinkResources false
+            signingConfig signingConfigs.release
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    productFlavors {
+        beta_in {
+        }
+        beta_out {
+        }
+        beta_preview {
+        }
+        offical {
+        }
+    }
+
+    productFlavors.all { flavor ->
+        manifestPlaceholders.put("CHANNEL_VALUE", name)
+    }
+
+    applicationVariants.all { variant ->
+        variant.outputs.all { output ->
+            def date = new Date()
+            def formattedDate = date.format('yyyyMMddHHmm')
+            def outputFile = output.outputFile
+            if (outputFile != null && outputFile.name.endsWith('.apk') && 'release'.equals(variant.buildType.name)) {
+                def fileName = "mk_${versionName}_${formattedDate}_${variant.productFlavors[0].name}.apk"
+                outputFileName = fileName
+            }
+        }
+    }
+
+    sourceSets {
+        main {
+            jniLibs.srcDirs = ['libs']
+        }
+    }
+
+    packagingOptions {
+        exclude 'META-INF/DEPENDENCIES'
+        exclude 'LICENSE.txt'
+        exclude 'META-INF/LICENSE'
+        exclude 'META-INF/LICENSE.txt'
+        exclude 'META-INF/NOTICE'
+    }
+
+    lintOptions {
+        abortOnError false
+    }
+
+    dexOptions {
+        javaMaxHeapSize "8g"
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+}
+
+dependencies {
+    testCompile 'junit:junit:4.12'
+    androidTestCompile("com.android.support.test.espresso:espresso-core:2.2.2", {
+        exclude group: 'com.android.support', module: 'support-annotations'
+        exclude group: 'com.google.code.findbugs'
+    })
+    androidTestCompile 'com.android.support.test.uiautomator:uiautomator-v18:2.1.2'
+
+    compile 'com.android.support:appcompat-v7:27.1.1'
+
+    compile 'com.jakewharton:butterknife:8.5.1'
+    annotationProcessor 'com.jakewharton:butterknife-compiler:8.5.1'
+
+    compile 'com.google.code.gson:gson:2.4'
+    compile 'com.squareup.okhttp3:okhttp:3.4.1'
+
+    compile 'com.blankj:utilcode:1.23.7'
+    compile 'com.nostra13.universalimageloader:universal-image-loader:1.9.5'
+}
+
+def getGitVersion() {
+    return 'git rev-parse --short HEAD'.execute().text.trim()
+}
+
+def getVersionCodeByName(String versionName) {
+    def arr = versionName.split('\\.')
+    for (int i = 1; i < arr.length; i++) {
+        if (arr[i].length() == 1) {
+            arr[i] = '0' + arr[i]
+        }
+    }
+    def versionCode = '';
+    for (int i = 0; i < arr.length; i++) {
+        versionCode = versionCode + arr[i];
+    }
+    println versionCode
+    return Integer.parseInt(versionCode)
+}
+
+def buildTime() {
+    return new Date().format("yyyy-MM-dd HH:mm")
+}
+
+def buildHost() {
+    return System.getProperty("user.name") + "@" + InetAddress.localHost.hostName
+}
+
+task _copyTestApkToAssets(dependsOn: ['assembleBeta_inDebugAndroidTest','_copyAction']) << {
+    println '..........copy test auto apk to assets finish............'
+}
+
+task _copyAction(type: Copy) {
+    from '/Users/minyangcheng/ProjectWork/security-project/make-money/app/build/outputs/apk/androidTest/beta_in/debug'
+    into '/Users/minyangcheng/ProjectWork/security-project/make-money/app/src/main/assets'
+    include('*.apk')
+    rename '(.+).apk', 'auto.apk'
+}

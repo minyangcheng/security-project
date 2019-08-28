@@ -4,6 +4,7 @@ var openMemoryName = '_ZN3art7DexFile10OpenMemoryEPKhjRKNSt3__112basic_stringIcN
 
 Interceptor.attach(Module.findExportByName('libart.so', openMemoryName), {
   onEnter: function(args) {
+    var begin = args[1];
     var address = parseInt(begin, 16) + 0x20;
     var dex_size = Memory.readInt(ptr(address));
 

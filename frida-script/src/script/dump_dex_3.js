@@ -2,12 +2,12 @@
 
 var packageName = 'com.min.app.sample';
 
-var openMemoryName = '_ZN3art7DexFile10OpenMemoryEPKhjRKNSt3__112basic_stringIcNS3_11char_traitsIcEENS3_9allocatorIcEEEEjPNS_6MemMapEPKNS_10OatDexFileEPS9_';
-var placeHolderArray;
+
 var DEX_MAGIC = 0x0A786564;
+var placeHolderArray;
 var dexrec = [];
 
-Interceptor.attach(Module.findExportByName('libart.so', openMemoryName), {
+Interceptor.attach(Module.findExportByName('libart.so', '_ZN3art7DexFile10OpenMemoryEPKhjRKNSt3__112basic_stringIcNS3_11char_traitsIcEENS3_9allocatorIcEEEEjPNS_6MemMapEPKNS_10OatDexFileEPS9_'), {
   onEnter: function(args) {
     if (Memory.readU32(args[1]) == DEX_MAGIC) {
       dexrec.push(args[1]);
@@ -73,6 +73,7 @@ function dumpDex() {
       var dexLength = Memory.readInt(dexLengthPtr);
       console.log("\nfind dex ,beginAddress = " + beginPtr + " , dexLength = " + dexLength);
       dump(beginPtr, 64);
+
       console.log("start dump dex ....");
       var filePath = "/data/data/" + packageName + "/" + dexLength + ".dex";
       var file = new File(filePath, "wb");

@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">MakeMoney</string>
+    <string name="info">使用说明:\n1. 点击安装趣头条、微哩看看、东方头条、趣看点、中青看点、悦头条，在弹出的界面点击安装，并完成登录操作\n2. 点击安装脚本按钮，在弹出的界面点击安装\n3. 点击启动脚本，即可开启自动刷金币</string>
+    <string name="more_help">1. 添加开发者微信号(Mike_yangcheng)进行咨询\n\n2. 添加网赚讨论QQ群（237503516）进行咨询\n\n\n注意：如需添加请备注：MakeMoney，非诚勿扰</string>
+</resources>
