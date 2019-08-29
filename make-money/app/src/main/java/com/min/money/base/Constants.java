@@ -9,7 +9,7 @@ public class Constants {
 
     public static final String HTTP_LOG = "HttpLog";
 
-    public static final String GLOBAL_LOG = "AppLog";
+    public static final String GLOBAL_LOG = "MMLog";
 
     public static boolean DEBUG = BuildConfig.DEBUG;
 

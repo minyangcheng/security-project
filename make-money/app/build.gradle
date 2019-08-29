@@ -116,6 +116,12 @@ android {
 
 }
 
+repositories {
+    flatDir {
+        dirs 'libs'
+    }
+}
+
 dependencies {
     testCompile 'junit:junit:4.12'
     androidTestCompile("com.android.support.test.espresso:espresso-core:2.2.2", {
@@ -134,6 +140,8 @@ dependencies {
 
     compile 'com.blankj:utilcode:1.23.7'
     compile 'com.nostra13.universalimageloader:universal-image-loader:1.9.5'
+
+    compile(name: 'RootShell', ext: 'aar')
 }
 
 def getGitVersion() {
@@ -163,7 +171,7 @@ def buildHost() {
     return System.getProperty("user.name") + "@" + InetAddress.localHost.hostName
 }
 
-task _copyTestApkToAssets(dependsOn: ['assembleBeta_inDebugAndroidTest','_copyAction']) << {
+task _copyTestApkToAssets(dependsOn: ['assembleBeta_inDebugAndroidTest', '_copyAction']) << {
     println '..........copy test auto apk to assets finish............'
 }
 

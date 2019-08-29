@@ -16,7 +16,14 @@ import java.util.Date;
 import java.util.List;
 import java.util.Random;
 
-public class Utils {
+public class Helper {
+
+    private static int OPERATE_CLICK_MIN_WAIT_TIME = 2500;
+    private static int OPERATE_CLICK_MAX_WAIT_TIME = 3500;
+
+    private static int OPERATE_SLIDE_MIN_WAIT_TIME = 1000;
+    private static int OPERATE_SLIDE_MAX_WAIT_TIME = 1500;
+
 
     private static SimpleDateFormat SDF = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
@@ -24,6 +31,7 @@ public class Utils {
      * 唤醒屏幕
      */
     public static void wakeUpDevice(UiDevice device) throws Exception {
+        device.pressHome();
         if (!device.isScreenOn()) {
             device.wakeUp();
         }
@@ -49,30 +57,31 @@ public class Utils {
      */
     public static void openAppSafe(UiDevice device, String packageName) {
         while (!device.hasObject(By.pkg(packageName))) {
-            Utils.openApp(packageName);
+            openApp(packageName);
             sleep(6000);
         }
     }
 
     /**
-     * 随机休眠
+     * 休眠
      */
-    public static void sleepRandomSecond(int from) {
-        long coreSecond = from * 1000;
-        long randomSecond = 1 * 1000;
-        sleep(coreSecond + (int) (Math.random() * randomSecond));
+    public static void sleep(int million) {
+        try {
+            Thread.sleep(million + (int) (Math.random() * 1000));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     /**
      * 随机休眠
      */
-    public static void sleepRandomSecond(int from, int to) {
-        long coreSecond = from * 1000;
-        long randomSecond = (to - from) * 1000;
-        if (randomSecond < 0) {
-            randomSecond = 0;
+    public static void sleep(int minMillion, int maxMillion) {
+        long tempMillion = maxMillion - minMillion;
+        if (tempMillion < 0) {
+            tempMillion = 0;
         }
-        sleep(coreSecond + (int) (Math.random() * randomSecond));
+        sleep(minMillion + (int) (Math.random() * tempMillion));
     }
 
     /**
@@ -83,7 +92,7 @@ public class Utils {
         String hourStr = sdf.format(new Date());
         int hour = Integer.parseInt(hourStr);
         if (hour <= 6 || hour == 23) {
-            LogUtils.i("非正常时间运行 : ", Utils.nowTimeStr());
+            LogUtils.i("非正常时间运行 : ", nowTimeStr());
             return false;
         } else {
             return true;
@@ -93,10 +102,28 @@ public class Utils {
     /**
      * 点击
      */
-    public static void click(UiDevice device, float x, float y) {
+    public static boolean click(UiDevice device, float x, float y) {
         int width = device.getDisplayWidth();
         int height = device.getDisplayHeight();
-        device.click((int) (width * x), (int) (height * y));
+        boolean flag = device.click((int) (width * x), (int) (height * y));
+        sleep(OPERATE_CLICK_MIN_WAIT_TIME, OPERATE_CLICK_MAX_WAIT_TIME);
+        return flag;
+    }
+
+    /**
+     * 点击
+     */
+    public static boolean click(UiObject2 uiObj) {
+        boolean flag = false;
+        try {
+            if (uiObj != null) {
+                uiObj.click();
+                flag = true;
+                sleep(OPERATE_CLICK_MIN_WAIT_TIME, OPERATE_CLICK_MAX_WAIT_TIME);
+            }
+        } catch (Exception e) {
+        }
+        return flag;
     }
 
     /**
@@ -109,10 +136,7 @@ public class Utils {
         boolean flag = false;
         try {
             UiObject2 uiObj = device.findObject(selector);
-            if (uiObj != null) {
-                uiObj.click();
-                flag = true;
-            }
+            return click(uiObj);
         } catch (Exception e) {
         }
         return flag;
@@ -120,27 +144,7 @@ public class Utils {
 
     /**
      * 随机点击
-     *
-     * @param device
-     * @param selector
-     * @return
-     */
-    public static boolean clickRandom(UiDevice device, BySelector selector) {
-        boolean flag = false;
-        try {
-            UiObject2 uiObj = device.findObject(selector);
-            if (uiObj != null && Math.random() <= 0.5) {
-                uiObj.click();
-                flag = true;
-            }
-        } catch (Exception e) {
-        }
-        return flag;
-    }
-
-    /**
-     * 随机点击
-     * 0-100%
+     * 0-1
      *
      * @param uiObj
      * @return
@@ -149,23 +153,21 @@ public class Utils {
         boolean flag = false;
         try {
             if (Math.random() <= percent) {
-                uiObj.click();
-                flag = true;
+                flag = click(uiObj);
             }
         } catch (Exception e) {
         }
         return flag;
     }
 
-    /**
-     * 随机点击
-     * 50%概率
-     *
-     * @param uiObj
-     * @return
-     */
-    public static boolean clickRandom(UiObject2 uiObj) {
-        return clickRandom(uiObj, 0.5f);
+    public static boolean clickRandom(UiDevice device, BySelector selector, float percent) {
+        boolean flag = false;
+        try {
+            UiObject2 uiObj = device.findObject(selector);
+            return clickRandom(uiObj, percent);
+        } catch (Exception e) {
+        }
+        return flag;
     }
 
     /**
@@ -174,28 +176,13 @@ public class Utils {
      * @param device
      */
     public static void readPage(UiDevice device) {
-        int step = getRandom(3, 5);
+        int step = getRandomInRange(3, 5);
         for (int i = 0; i < step; i++) {
-            Utils.slideVertical(device, 0.6f, 0.2f);
-            Utils.sleepRandomSecond(1, 4);
-
-            if (device.hasObject(By.desc("展开全文 Link"))) {
-                Utils.slideVertical(device, 0.4f, 0.2f);
-                Utils.click(device, By.desc("展开全文 Link"));
-            }
-            if (device.hasObject(By.text("展开查看全文"))) {
-                Utils.slideVertical(device, 0.4f, 0.2f);
-                Utils.click(device, By.text("展开查看全文"));
-            }
-
-            if (device.hasObject(By.res("com.zhangku.qukandian:id/header_information_read_all_btn"))) {
-                Utils.slideVertical(device, 0.4f, 0.2f);
-                Utils.click(device, By.res("com.zhangku.qukandian:id/header_information_read_all_btn"));
-            }
-            if (Math.random() < 0.1) {
-                Utils.slideVertical(device, 0.6f, 0.8f);
-                Utils.sleepRandomSecond(1, 3);
-            }
+            readTextLong();
+            slideVertical(device, 0.6f, 0.2f);
+            click(device, By.desc("展开全文 Link"));
+            click(device, By.text("展开查看全文"));
+            click(device, By.res("com.zhangku.qukandian:id/header_information_read_all_btn"));
         }
     }
 
@@ -209,11 +196,14 @@ public class Utils {
         Random random = new Random();
         int times = random.nextInt(3);
         for (int i = 0; i <= times; i++) {
-            if (Utils.click(device, By.text(pageTexts[random.nextInt(pageTexts.length)]))) {
-                Utils.sleepRandomSecond(2, 4);
+            int temp = random.nextInt(pageTexts.length);
+            if (click(device, By.text(pageTexts[temp]))) {
+                LogUtils.d("点击进入页面：" + pageTexts[temp]);
+                readTextShort();
                 device.pressBack();
+                LogUtils.d("点击返回键退出页面");
             }
-            Utils.slideVertical(device, 0.3f, 0.2f);
+            slideVertical(device, 0.3f, 0.2f);
         }
     }
 
@@ -221,47 +211,76 @@ public class Utils {
         slideHorizontal(device, 0.2f, 0.8f);
     }
 
-    public static void slideHorizontal(UiDevice device, float from, float to) {
+    public static void slideHorizontal(UiDevice device, float start, float end) {
         LogUtils.d("operate :  slideHorizontal");
         int width = device.getDisplayWidth();
         int height = device.getDisplayHeight();
-        device.swipe((int) (width * from), height / 2, (int) (width * to), height / 2, 100);
+        device.swipe((int) (width * start), height / 2, (int) (width * end), height / 2, 100);
+        sleep(OPERATE_SLIDE_MIN_WAIT_TIME, OPERATE_SLIDE_MAX_WAIT_TIME);
     }
 
     public static void slideVerticalUp(UiDevice device) {
         slideVertical(device, 0.8f, 0.2f);
     }
 
-    public static void slideVertical(UiDevice device, float from, float to) {
+    public static void slideVertical(UiDevice device, float start, float end) {
         LogUtils.d("operate :  slideVertical");
         int width = device.getDisplayWidth();
         int height = device.getDisplayHeight();
-        device.swipe(width / 2, (int) (height * from), width / 2, (int) (height * to), 100);
+        device.swipe(width / 2, (int) (height * start), width / 2, (int) (height * end), 100);
+        sleep(OPERATE_SLIDE_MIN_WAIT_TIME, OPERATE_SLIDE_MAX_WAIT_TIME);
     }
 
     public static void closeAPP(String packageName) {
         RootCmd.execRootCmdSilent("am force-stop " + packageName);
     }
 
-    public static String getText(UiObject2 parentUiObj, BySelector selector) {
+    public static String getText(UiObject2 uiObj, BySelector selector) {
         try {
-            UiObject2 textUiObj2 = parentUiObj.findObject(selector);
+            UiObject2 textUiObj2 = uiObj.findObject(selector);
             return textUiObj2.getText();
         } catch (Exception e) {
         }
         return "";
     }
 
-    public static UiObject2 findObject(UiDevice device, BySelector selector) {
+    public static String getText(UiDevice device, BySelector selector) {
+        try {
+            UiObject2 textUiObj2 = device.findObject(selector);
+            return textUiObj2.getText();
+        } catch (Exception e) {
+        }
+        return "";
+    }
+
+    public static boolean arrivePageSafe(UiDevice device, BySelector selector) {
         UiObject2 object = null;
-        int timeout = 6000;
-        int delay = 1500;
+        int timeout = 8000;
+        int delay = 2000;
+        long time = System.currentTimeMillis();
+        while (object == null) {
+            object = device.findObject(selector);
+            if (object == null) {
+                if (System.currentTimeMillis() - time > timeout) {
+                    break;
+                }
+                device.pressBack();
+                sleep(delay);
+            }
+        }
+        return object != null;
+    }
+
+    public static UiObject2 findObjectInCertainTime(UiDevice device, BySelector selector) {
+        UiObject2 object = null;
+        int timeout = 8000;
+        int delay = 2000;
         long time = System.currentTimeMillis();
         while (object == null) {
             object = device.findObject(selector);
             if (object == null) {
                 sleep(delay);
-                if (System.currentTimeMillis() - timeout > time) {
+                if (System.currentTimeMillis() - time > timeout) {
                     break;
                 }
             }
@@ -269,27 +288,31 @@ public class Utils {
         return object;
     }
 
-    public static List<UiObject2> findObjects(UiDevice device, BySelector selector) {
-        List<UiObject2> objects = null;
-        int timeout = 6000;
-        int delay = 1500;
-        long time = System.currentTimeMillis();
-        while (objects == null) {
-            objects = device.findObjects(selector);
-            if (objects == null) {
-                sleep(delay);
-                if (System.currentTimeMillis() - timeout > time) {
-                    break;
-                }
-            }
-        }
-        return objects;
+    public static boolean waitUiObjAppear(UiDevice device, BySelector selector) {
+        return findObjectInCertainTime(device, selector) != null;
     }
 
-    public static int getRandom(int from, int to) {
+    public static int getRandomInRange(int min, int max) {
         Random random = new Random();
-        int temp = from + random.nextInt(to - from + 1);
-        return temp;
+        int temp = min + random.nextInt(max - min + 1);
+//        return temp;
+        return 4;
+    }
+
+    public static void readTextShort() {
+        Helper.sleep(1500, 3000);
+    }
+
+    public static void readTextLong() {
+        Helper.sleep(2000, 4000);
+    }
+
+    public static void readVideoShort() {
+        Helper.sleep(20000, 30000);
+    }
+
+    public static void readVideoLong() {
+        Helper.sleep(20000, 60000);
     }
 
     public static String nowTimeStr() {
@@ -310,11 +333,14 @@ public class Utils {
         return time;
     }
 
-    public static void sleep(long million) {
-        try {
-            Thread.sleep(million);
-        } catch (Exception e) {
-            e.printStackTrace();
+    public static void recordLogHasDismissDialog(List<Boolean> dataList) {
+        if (dataList != null) {
+            for (boolean flag : dataList) {
+                if (flag) {
+                    LogUtils.i("处理弹出窗口.....");
+                    break;
+                }
+            }
         }
     }
 

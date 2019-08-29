@@ -92,7 +92,7 @@ public class MainActivity extends AppCompatActivity {
     @OnClick(R.id.btn_start)
     void startAuto() {
         if (RootCmd.haveRoot()) {
-            RootCmd.execRootCmdSilent("am instrument -w -r   -e debug false -e class com.min.money.test.AutoScript com.min.money.test/android.support.test.runner.AndroidJUnitRunner");
+            RootCmd.execRootCmd("am instrument -w -r -e debug false -e class com.min.money.test.AutoScript com.min.money.test/android.support.test.runner.AndroidJUnitRunner");
         } else {
             ToastUtils.showShort("由于启动自动化脚本，需要root权限，请下载king root应用软件进行root手机操作");
         }

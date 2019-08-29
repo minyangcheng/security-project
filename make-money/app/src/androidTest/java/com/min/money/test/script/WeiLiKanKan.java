@@ -3,9 +3,11 @@ package com.min.money.test.script;
 import android.support.test.uiautomator.By;
 import android.support.test.uiautomator.UiObject2;
 
+import com.blankj.utilcode.util.LogUtils;
 import com.min.money.test.BaseAuto;
-import com.min.money.test.util.Utils;
+import com.min.money.test.util.Helper;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class WeiLiKanKan extends BaseAuto {
@@ -15,95 +17,111 @@ public class WeiLiKanKan extends BaseAuto {
     }
 
     @Override
-    public void operate() throws Exception {
-        for (int i = 0; i < 2; i++) {
-            Utils.sleepRandomSecond(2, 4);
-            newsPage();
-            Utils.click(mDevice, By.text("我的"));
-            Utils.sleepRandomSecond(2, 4);
-            minePage();
-//            Utils.click(mDevice, By.text("社区"));
-//            Utils.sleepRandomSecond(2, 4);
-//            socialPage();
-//            Utils.click(mDevice, By.text("视频"));
-//            Utils.sleepRandomSecond(2, 4);
-//            videoPage();
-            Utils.click(mDevice, By.text("头条"));
-            Utils.sleepRandomSecond(2, 4);
+    public void operate() {
+        for (int i = 0; i < mOperateTimes; i++) {
+            if (Helper.click(mDevice, By.text("头条")) || Helper.waitUiObjAppear(mDevice, By.text("推荐"))) {
+                LogUtils.i("进入头条页面");
+                newsPage();
+            }
+            if (Helper.click(mDevice, By.text("我的"))) {
+                LogUtils.i("进入我的页面");
+                minePage();
+            }
+            if (Helper.click(mDevice, By.text("社区"))) {
+                LogUtils.i("进入社区页面");
+                socialPage();
+            }
         }
     }
 
-    public void newsPage() throws Exception {
-        int step = Utils.getRandom(mMinCycleValue, mMaxCycleValue);
+    @Override
+    protected void removeRedundancyDialog() {
+        List<Boolean> dataList = new ArrayList<>();
+        dataList.add(Helper.click(mDevice, By.res("cn.weli.story:id/iv_take")));
+        dataList.add(Helper.click(mDevice, By.res("cn.weli.story:id/iv_close")));
+        dataList.add(Helper.click(mDevice, By.res("cn.weli.story:id/ic_close")));
+        dataList.add(Helper.click(mDevice, By.res("cn.weli.story:id/bt_ok")));
+        dataList.add(Helper.click(mDevice, By.res("cn.weli.story:id/image_close")));
+        dataList.add(Helper.click(mDevice, By.res("cn.weli.story:id/text_ok")));
+        Helper.recordLogHasDismissDialog(dataList);
+    }
+
+    public void newsPage() {
+        int step = Helper.getRandomInRange(mMinCycleValue, mMaxCycleValue);
         for (int i = 0; i < step; i++) {
-            Utils.click(mDevice, By.res("cn.weli.story:id/iv_take"));
-            Utils.click(mDevice, By.res("cn.weli.story:id/iv_close"));
-            Utils.click(mDevice, By.res("cn.weli.story:id/bt_ok"));
+            removeRedundancyDialog();
 
             List<UiObject2> uiObjList = mDevice.findObjects(By.res("cn.weli.story:id/tv_title"));
             for (UiObject2 uiObj : uiObjList) {
                 try {
-                    boolean flag = Utils.clickRandom(uiObj, 0.85f);
-                    if (flag) {
-                        Utils.sleepRandomSecond(4, 6);
-                        newsDetailPage();
-                        mDevice.pressBack();
+                    if (uiObj.getParent().findObject(By.res("cn.weli.story:id/ll_open")) != null) {
+                        Helper.click(uiObj);
+                        removeRedundancyDialog();
+                    } else {
+                        String tempStr = uiObj.getText();
+                        if (checkItemHasOperate(tempStr)) {
+                            continue;
+                        }
+                        if (Helper.click(uiObj)) {
+                            LogUtils.i("点击进入标题页面：" + tempStr);
+                            newsDetailPage();
+                            mDevice.pressBack();
+                            LogUtils.i("点击返回键退出标题页面");
+                        }
                     }
                 } catch (Exception e) {
                 }
             }
-            Utils.click(mDevice, By.res("cn.weli.story:id/iv_gold"));
-            Utils.slideVerticalUp(mDevice);
-            Utils.sleepRandomSecond(1);
+            Helper.slideVerticalUp(mDevice);
+            if (Helper.click(mDevice, By.res("cn.weli.story:id/tv_treasure_count"))) {
+                LogUtils.i("点击领取时段奖励");
+            }
         }
     }
 
-    public void minePage() throws Exception {
-        Utils.click(mDevice, By.res("cn.weli.story:id/image_close"));
+    public void minePage() {
+        removeRedundancyDialog();
 
-        Utils.click(mDevice, By.textContains("立即签到"));
-        Utils.sleepRandomSecond(1);
-        Utils.click(mDevice, By.res("cn.weli.story:id/ic_close"));
-        Utils.click(mDevice, 0.9f, 0.9f);
-
+        if (Helper.click(mDevice, By.textContains("立即签到"))) {
+            Helper.click(mDevice, By.res("cn.weli.story:id/ic_close"));
+            Helper.click(mDevice, 0.9f, 0.9f);
+        }
+        LogUtils.i(mTag + " now coin = " + Helper.getText(mDevice, By.res("cn.weli.story:id/text_today_coin")));
         String[] textArr = {"我的金币", "累计零钱", "零钱余额", "短信邀请"};
-        Utils.openPageRandom(mDevice, textArr);
+        Helper.openPageRandom(mDevice, textArr);
     }
 
-    public void newsDetailPage() throws Exception {
-        Utils.sleepRandomSecond(3);
-        Utils.click(mDevice, By.res("cn.weli.story:id/bt_ok"));
-        Utils.readPage(mDevice);
+    public void newsDetailPage() {
+        removeRedundancyDialog();
+        Helper.readPage(mDevice);
     }
 
-    public void socialPage() throws Exception {
-        int step = Utils.getRandom(1, 2);
+    public void socialPage() {
+        int step = Helper.getRandomInRange(1, 2);
         for (int i = 0; i < step; i++) {
-            Utils.slideVertical(mDevice, 0.8f, 0.2f);
-            Utils.sleepRandomSecond(2, 4);
-            Utils.click(mDevice, 0.5f, 0.5f);
-            Utils.sleepRandomSecond(2, 4);
+            Helper.slideVerticalUp(mDevice);
+            Helper.click(mDevice, 0.5f, 0.5f);
+            Helper.readTextShort();
             mDevice.pressBack();
         }
-        Utils.click(mDevice, By.res("关注"));
-        Utils.slideVertical(mDevice, 0.6f, 0.2f);
+        Helper.click(mDevice, By.res("关注"));
+        Helper.slideVertical(mDevice, 0.6f, 0.2f);
     }
 
-    public void videoPage() throws Exception {
-        int step = Utils.getRandom(mMinCycleValue, mMaxCycleValue);
+    public void videoPage() {
+        int step = Helper.getRandomInRange(mMinCycleValue, mMaxCycleValue);
         for (int i = 0; i < step; i++) {
             List<UiObject2> uiObjList = mDevice.findObjects(By.res("cn.weli.story:id/img_ic_play"));
             for (UiObject2 uiObj : uiObjList) {
                 try {
-                    if (Utils.clickRandom(uiObj, 0.85f)) {
-                        Utils.sleepRandomSecond(20, 30);
+                    if (Helper.clickRandom(uiObj, 0.85f)) {
+                        Helper.readVideoShort();
                         mDevice.pressBack();
                     }
                 } catch (Exception e) {
                 }
             }
-            Utils.slideVerticalUp(mDevice);
-            Utils.sleepRandomSecond(1);
+            Helper.slideVerticalUp(mDevice);
         }
     }
 

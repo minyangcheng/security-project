@@ -2,51 +2,78 @@ package com.min.money.test;
 
 import android.support.test.InstrumentationRegistry;
 import android.support.test.uiautomator.UiDevice;
+import android.text.TextUtils;
 
 import com.blankj.utilcode.util.LogUtils;
-import com.min.money.test.util.Utils;
+import com.min.money.test.util.Helper;
 
-/**
- * Created by minych on 18-9-2.
- */
+import java.util.HashSet;
+import java.util.Set;
 
 public abstract class BaseAuto {
 
+    protected String mTag;
+
     protected int mMinCycleValue = 10;
     protected int mMaxCycleValue = 20;
+    protected int mOperateTimes = 1;
 
     protected String mPackageName;
     protected UiDevice mDevice;
 
+    protected Set<Integer> mRecordSet = new HashSet<>();
+
     public BaseAuto(String packageName) {
         this.mPackageName = packageName;
+        this.mTag = "app " + mPackageName;
     }
 
-    public void startApp() throws Exception {
+    public static void start(BaseAuto autoScript) {
+        autoScript.run();
+    }
+
+    protected void open() throws Exception {
         mDevice = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation());
-        Utils.wakeUpDevice(mDevice);
-        mDevice.pressHome();
-        Utils.sleepRandomSecond(2);
-        Utils.openAppSafe(mDevice, mPackageName);
+        Helper.wakeUpDevice(mDevice);
+        Helper.openAppSafe(mDevice, mPackageName);
     }
 
-    /**
-     * 启动操作
-     */
-    public void run() {
+    protected void run() {
         try {
-            LogUtils.i(String.format("app packageName=%s operate start, time=%s", mPackageName, Utils.nowTimeStr()));
-            startApp();
+            checkRightTime();
+            LogUtils.i(String.format("%s operate start, time=%s", mTag, Helper.nowTimeStr()));
+            open();
+            removeRedundancyDialog();
             operate();
-            LogUtils.i(String.format("app packageName=%s operate finish , time=%s", mPackageName, Utils.nowTimeStr()));
+            LogUtils.i(String.format("%s operate finish , time=%s", mTag, Helper.nowTimeStr()));
+            mDevice.pressBack();
+            Helper.sleep(500);
+            mDevice.pressBack();
         } catch (Exception e) {
-            e.printStackTrace();
+            LogUtils.e(e);
         }
     }
 
-    /**
-     * 实现操作
-     */
-    public abstract void operate() throws Exception;
+    protected abstract void operate() throws Exception;
+
+    protected void removeRedundancyDialog() {
+    }
+
+    protected void checkRightTime() {
+        while (!Helper.checkRightTime()) {
+            Helper.sleep(60000);
+        }
+    }
+
+    protected boolean checkItemHasOperate(String str) {
+        if (TextUtils.isEmpty(str)) {
+            return true;
+        }
+        if (mRecordSet.contains(str.hashCode())) {
+            return true;
+        }
+        mRecordSet.add(str.hashCode());
+        return false;
+    }
 
 }
