@@ -14,8 +14,8 @@ public abstract class BaseAuto {
 
     protected String mTag;
 
-    protected int mMinCycleValue = 10;
-    protected int mMaxCycleValue = 20;
+    protected int mMinCycleValue = 20;
+    protected int mMaxCycleValue = 40;
     protected int mOperateTimes = 1;
 
     protected String mPackageName;
@@ -45,9 +45,12 @@ public abstract class BaseAuto {
             open();
             removeRedundancyDialog();
             operate();
+            recordCoin();
             LogUtils.i(String.format("%s operate finish , time=%s", mTag, Helper.nowTimeStr()));
             mDevice.pressBack();
-            Helper.sleep(500);
+            Helper.sleep(200);
+            mDevice.pressBack();
+            Helper.sleep(200);
             mDevice.pressBack();
         } catch (Exception e) {
             LogUtils.e(e);
@@ -57,6 +60,9 @@ public abstract class BaseAuto {
     protected abstract void operate() throws Exception;
 
     protected void removeRedundancyDialog() {
+    }
+
+    protected void recordCoin() {
     }
 
     protected void checkRightTime() {

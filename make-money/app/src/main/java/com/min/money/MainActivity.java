@@ -10,6 +10,7 @@ import com.blankj.utilcode.util.SPStaticUtils;
 import com.blankj.utilcode.util.ToastUtils;
 import com.min.money.helper.DialogHelper;
 import com.min.money.helper.FileUtil;
+import com.min.money.helper.PermissionHelper;
 import com.min.money.helper.RootCmd;
 
 import java.io.File;
@@ -23,6 +24,12 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        PermissionHelper.requestAppPermission(new PermissionHelper.SimplePermissionCallback() {
+            @Override
+            public void grantSuccess() {
+
+            }
+        });
         ButterKnife.bind(this);
     }
 

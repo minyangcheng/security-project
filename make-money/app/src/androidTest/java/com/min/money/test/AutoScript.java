@@ -6,6 +6,7 @@ import com.blankj.utilcode.util.LogUtils;
 import com.blankj.utilcode.util.SPStaticUtils;
 import com.min.money.test.script.QuTouTiao;
 import com.min.money.test.script.WeiLiKanKan;
+import com.min.money.test.util.Helper;
 import com.min.money.test.util.Utils;
 
 import org.junit.After;
@@ -27,8 +28,11 @@ public class AutoScript {
 
     @Test
     public void startAutoScript() {
-        BaseAuto.start(new QuTouTiao());
-        BaseAuto.start(new WeiLiKanKan());
+        while (true) {
+//            BaseAuto.start(new QuTouTiao());
+            BaseAuto.start(new WeiLiKanKan());
+            Helper.sleep(5000,8000);
+        }
     }
 
     @After

@@ -35,6 +35,15 @@ public class WeiLiKanKan extends BaseAuto {
     }
 
     @Override
+    protected void recordCoin() {
+        if (Helper.click(mDevice, By.text("我的"))) {
+            LogUtils.i("查看金币，进入我的页面");
+            removeRedundancyDialog();
+            Helper.recordLogCoin(mTag, Helper.getText(mDevice, By.res("cn.weli.story:id/text_today_coin")));
+        }
+    }
+
+    @Override
     protected void removeRedundancyDialog() {
         List<Boolean> dataList = new ArrayList<>();
         dataList.add(Helper.click(mDevice, By.res("cn.weli.story:id/iv_take")));
@@ -62,7 +71,7 @@ public class WeiLiKanKan extends BaseAuto {
                         if (checkItemHasOperate(tempStr)) {
                             continue;
                         }
-                        if (Helper.click(uiObj)) {
+                        if (Helper.clickRandom(uiObj, 0.8f)) {
                             LogUtils.i("点击进入标题页面：" + tempStr);
                             newsDetailPage();
                             mDevice.pressBack();
@@ -83,10 +92,9 @@ public class WeiLiKanKan extends BaseAuto {
         removeRedundancyDialog();
 
         if (Helper.click(mDevice, By.textContains("立即签到"))) {
-            Helper.click(mDevice, By.res("cn.weli.story:id/ic_close"));
-            Helper.click(mDevice, 0.9f, 0.9f);
+            Helper.click(mDevice, By.clazz("android.widget.Button").text("立即签到"));
+            mDevice.pressBack();
         }
-        LogUtils.i(mTag + " now coin = " + Helper.getText(mDevice, By.res("cn.weli.story:id/text_today_coin")));
         String[] textArr = {"我的金币", "累计零钱", "零钱余额", "短信邀请"};
         Helper.openPageRandom(mDevice, textArr);
     }
@@ -114,7 +122,7 @@ public class WeiLiKanKan extends BaseAuto {
             List<UiObject2> uiObjList = mDevice.findObjects(By.res("cn.weli.story:id/img_ic_play"));
             for (UiObject2 uiObj : uiObjList) {
                 try {
-                    if (Helper.clickRandom(uiObj, 0.85f)) {
+                    if (Helper.clickRandom(uiObj, 0.8f)) {
                         Helper.readVideoShort();
                         mDevice.pressBack();
                     }

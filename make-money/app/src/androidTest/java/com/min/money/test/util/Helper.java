@@ -7,6 +7,7 @@ import android.support.test.uiautomator.By;
 import android.support.test.uiautomator.BySelector;
 import android.support.test.uiautomator.UiDevice;
 import android.support.test.uiautomator.UiObject2;
+import android.text.TextUtils;
 
 import com.blankj.utilcode.util.LogUtils;
 import com.min.money.helper.RootCmd;
@@ -178,11 +179,11 @@ public class Helper {
     public static void readPage(UiDevice device) {
         int step = getRandomInRange(3, 5);
         for (int i = 0; i < step; i++) {
-            readTextLong();
             slideVertical(device, 0.6f, 0.2f);
             click(device, By.desc("展开全文 Link"));
             click(device, By.text("展开查看全文"));
             click(device, By.res("com.zhangku.qukandian:id/header_information_read_all_btn"));
+            readTextLong();
         }
     }
 
@@ -198,10 +199,10 @@ public class Helper {
         for (int i = 0; i <= times; i++) {
             int temp = random.nextInt(pageTexts.length);
             if (click(device, By.text(pageTexts[temp]))) {
-                LogUtils.d("点击进入页面：" + pageTexts[temp]);
+                LogUtils.i("点击进入页面：" + pageTexts[temp]);
                 readTextShort();
                 device.pressBack();
-                LogUtils.d("点击返回键退出页面");
+                LogUtils.i("点击返回键退出页面");
             }
             slideVertical(device, 0.3f, 0.2f);
         }
@@ -212,7 +213,7 @@ public class Helper {
     }
 
     public static void slideHorizontal(UiDevice device, float start, float end) {
-        LogUtils.d("operate :  slideHorizontal");
+        LogUtils.i("operate :  slideHorizontal");
         int width = device.getDisplayWidth();
         int height = device.getDisplayHeight();
         device.swipe((int) (width * start), height / 2, (int) (width * end), height / 2, 100);
@@ -224,7 +225,7 @@ public class Helper {
     }
 
     public static void slideVertical(UiDevice device, float start, float end) {
-        LogUtils.d("operate :  slideVertical");
+        LogUtils.i("operate :  slideVertical");
         int width = device.getDisplayWidth();
         int height = device.getDisplayHeight();
         device.swipe(width / 2, (int) (height * start), width / 2, (int) (height * end), 100);
@@ -295,16 +296,15 @@ public class Helper {
     public static int getRandomInRange(int min, int max) {
         Random random = new Random();
         int temp = min + random.nextInt(max - min + 1);
-//        return temp;
-        return 4;
+        return temp;
     }
 
     public static void readTextShort() {
-        Helper.sleep(1500, 3000);
+        Helper.sleep(1000, 2000);
     }
 
     public static void readTextLong() {
-        Helper.sleep(2000, 4000);
+        Helper.sleep(2000, 3000);
     }
 
     public static void readVideoShort() {
@@ -342,6 +342,13 @@ public class Helper {
                 }
             }
         }
+    }
+
+    public static void recordLogCoin(String tag, String coin) {
+        if (TextUtils.isEmpty(coin)) {
+            coin = "null";
+        }
+        LogUtils.i(String.format(tag + " time= %s , now coin=%s", nowTimeStr(), coin));
     }
 
 }

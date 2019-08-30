@@ -39,6 +39,15 @@ public class QuTouTiao extends BaseAuto {
     }
 
     @Override
+    protected void recordCoin() {
+        if (Helper.click(mDevice, By.text("我的"))) {
+            LogUtils.i("查看金币，进入我的页面");
+            removeRedundancyDialog();
+            Helper.recordLogCoin(mTag, Helper.getText(mDevice, By.res("com.jifen.qukan:id/tx")));
+        }
+    }
+
+    @Override
     protected void removeRedundancyDialog() {
         List<Boolean> dataList = new ArrayList<>();
         dataList.add(Helper.click(mDevice, By.res("com.jifen.qukan:id/rb").text("以后更新")));
@@ -63,7 +72,7 @@ public class QuTouTiao extends BaseAuto {
                         continue;
                     }
                     mRecordSet.add(tempStr.hashCode());
-                    if (Helper.clickRandom(uiObj, 1)) {
+                    if (Helper.clickRandom(uiObj, 0.8f)) {
                         LogUtils.i("点击进入标题页面：" + tempStr);
                         Helper.readTextLong();
                         newsDetailPage();
@@ -80,6 +89,7 @@ public class QuTouTiao extends BaseAuto {
 
     public void minePage() {
         removeRedundancyDialog();
+
         String[] textArr = {"我的金币", "提现兑换", "提现记录", "历史记录"};
         Helper.openPageRandom(mDevice, textArr);
     }
@@ -108,7 +118,7 @@ public class QuTouTiao extends BaseAuto {
                     if (checkItemHasOperate(tempStr)) {
                         continue;
                     }
-                    if (Helper.clickRandom(uiObj, 1)) {
+                    if (Helper.clickRandom(uiObj, 0.8f)) {
                         LogUtils.i("点击观看视频：" + tempStr);
                         Helper.readVideoShort();
                         LogUtils.i("观看视频完毕");
