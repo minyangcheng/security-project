@@ -15,7 +15,7 @@ public class ZhongQingKanDian extends BaseAuto {
     }
 
     @Override
-    public void operate() throws Exception {
+    public void operate() {
         for (int i = 0; i < 2; i++) {
             Utils.sleepRandomSecond(2, 4);
             newsPage();
@@ -33,7 +33,7 @@ public class ZhongQingKanDian extends BaseAuto {
         }
     }
 
-    public void newsPage() throws Exception {
+    public void newsPage()  {
         int step = Utils.getRandom(mMinCycleValue, mMaxCycleValue);
         for (int i = 0; i < step; i++) {
             Utils.click(mDevice, By.res("cn.youth.news:id/ge"));
@@ -55,18 +55,18 @@ public class ZhongQingKanDian extends BaseAuto {
         }
     }
 
-    public void minePage() throws Exception {
+    public void minePage()  {
         Utils.click(mDevice, By.res("cn.youth.news:id/ge"));
 
         String[] textArr = {"关注", "收藏", "收入明细", "兑换提现"};
         Utils.openPageRandom(mDevice, textArr);
     }
 
-    public void newsDetailPage() throws Exception {
+    public void newsDetailPage()  {
         Utils.readPage(mDevice);
     }
 
-    public void rankPage() throws Exception {
+    public void rankPage()  {
         int step = Utils.getRandom(mMinCycleValue, mMaxCycleValue);
         for (int i = 0; i < step; i++) {
             Utils.click(mDevice, By.res("cn.youth.news:id/ge"));
@@ -88,7 +88,7 @@ public class ZhongQingKanDian extends BaseAuto {
         }
     }
 
-    public void videoPage() throws Exception {
+    public void videoPage()  {
         int step = Utils.getRandom(mMinCycleValue, mMaxCycleValue);
         for (int i = 0; i < step; i++) {
             Utils.click(mDevice, By.res("cn.youth.news:id/ge"));

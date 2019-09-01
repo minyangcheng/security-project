@@ -7,7 +7,7 @@ import android.support.test.uiautomator.By;
 import android.support.test.uiautomator.BySelector;
 import android.support.test.uiautomator.UiDevice;
 import android.support.test.uiautomator.UiObject2;
-import android.text.TextUtils;
+import android.widget.TextView;
 
 import com.blankj.utilcode.util.LogUtils;
 import com.min.money.helper.RootCmd;
@@ -16,6 +16,8 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Random;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class Helper {
 
@@ -34,11 +36,13 @@ public class Helper {
     public static void wakeUpDevice(UiDevice device) throws Exception {
         device.pressHome();
         if (!device.isScreenOn()) {
+            LogUtils.i("operate : wake up screen");
             device.wakeUp();
         }
         String launcherPackage = device.getLauncherPackageName();
         if (!device.hasObject(By.pkg(launcherPackage).depth(0))) {
-            slideVerticalUp(device);
+            slideVertical(device, 0.8f, 0.1f);
+            LogUtils.i("operate : unlock mobile");
             sleep(1500);
         }
     }
@@ -51,6 +55,7 @@ public class Helper {
         Intent intent = context.getPackageManager().getLaunchIntentForPackage(packageName);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
         context.startActivity(intent);
+        LogUtils.i("operate : open app " + packageName);
     }
 
     /**
@@ -68,7 +73,8 @@ public class Helper {
      */
     public static void sleep(int million) {
         try {
-            Thread.sleep(million + (int) (Math.random() * 1000));
+            int temp = million + (int) (Math.random() * 1000);
+            Thread.sleep(temp);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -93,7 +99,6 @@ public class Helper {
         String hourStr = sdf.format(new Date());
         int hour = Integer.parseInt(hourStr);
         if (hour <= 6 || hour == 23) {
-            LogUtils.i("非正常时间运行 : ", nowTimeStr());
             return false;
         } else {
             return true;
@@ -107,7 +112,10 @@ public class Helper {
         int width = device.getDisplayWidth();
         int height = device.getDisplayHeight();
         boolean flag = device.click((int) (width * x), (int) (height * y));
-        sleep(OPERATE_CLICK_MIN_WAIT_TIME, OPERATE_CLICK_MAX_WAIT_TIME);
+        if (flag) {
+            LogUtils.i("operate : click");
+            sleep(OPERATE_CLICK_MIN_WAIT_TIME, OPERATE_CLICK_MAX_WAIT_TIME);
+        }
         return flag;
     }
 
@@ -118,6 +126,7 @@ public class Helper {
         boolean flag = false;
         try {
             if (uiObj != null) {
+                LogUtils.i("operate : click");
                 uiObj.click();
                 flag = true;
                 sleep(OPERATE_CLICK_MIN_WAIT_TIME, OPERATE_CLICK_MAX_WAIT_TIME);
@@ -136,8 +145,10 @@ public class Helper {
     public static boolean click(UiDevice device, BySelector selector) {
         boolean flag = false;
         try {
-            UiObject2 uiObj = device.findObject(selector);
-            return click(uiObj);
+            if (device.hasObject(selector)) {
+                UiObject2 uiObj = device.findObject(selector);
+                return click(uiObj);
+            }
         } catch (Exception e) {
         }
         return flag;
@@ -177,12 +188,11 @@ public class Helper {
      * @param device
      */
     public static void readPage(UiDevice device) {
-        int step = getRandomInRange(3, 5);
-        for (int i = 0; i < step; i++) {
+        int times = getRandomInRange(3, 5);
+        for (int i = 0; i < times; i++) {
             slideVertical(device, 0.6f, 0.2f);
-            click(device, By.desc("展开全文 Link"));
-            click(device, By.text("展开查看全文"));
-            click(device, By.res("com.zhangku.qukandian:id/header_information_read_all_btn"));
+            click(device, By.text("展开查看全文").clazz(TextView.class));
+            click(device, By.text("点击阅读全文").clazz(TextView.class));
             readTextLong();
         }
     }
@@ -195,8 +205,9 @@ public class Helper {
      */
     public static void openPageRandom(UiDevice device, String[] pageTexts) {
         Random random = new Random();
-        int times = random.nextInt(3);
-        for (int i = 0; i <= times; i++) {
+        int times = random.nextInt(4);
+        LogUtils.i("随机打开页面开始，次数：" + times);
+        for (int i = 0; i < times; i++) {
             int temp = random.nextInt(pageTexts.length);
             if (click(device, By.text(pageTexts[temp]))) {
                 LogUtils.i("点击进入页面：" + pageTexts[temp]);
@@ -206,6 +217,7 @@ public class Helper {
             }
             slideVertical(device, 0.3f, 0.2f);
         }
+        LogUtils.i("随机打开页面完毕");
     }
 
     public static void slideHorizontalRight(UiDevice device) {
@@ -234,6 +246,7 @@ public class Helper {
 
     public static void closeAPP(String packageName) {
         RootCmd.execRootCmdSilent("am force-stop " + packageName);
+        LogUtils.i("operate : close app " + packageName);
     }
 
     public static String getText(UiObject2 uiObj, BySelector selector) {
@@ -252,6 +265,28 @@ public class Helper {
         } catch (Exception e) {
         }
         return "";
+    }
+
+    public static String getText(UiObject2 uiObj) {
+        try {
+            return uiObj.getText();
+        } catch (Exception e) {
+        }
+        return "";
+    }
+
+    public static boolean judgeBrotherNode(UiDevice device, BySelector selfSelector, BySelector brotherSelector) {
+        try {
+            if (device.hasObject(selfSelector)) {
+                UiObject2 uiObj = device.findObject(selfSelector);
+                if (uiObj.getParent().hasObject(brotherSelector)) {
+                    return true;
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
     }
 
     public static boolean arrivePageSafe(UiDevice device, BySelector selector) {
@@ -296,7 +331,7 @@ public class Helper {
     public static int getRandomInRange(int min, int max) {
         Random random = new Random();
         int temp = min + random.nextInt(max - min + 1);
-        return temp;
+        return 2;
     }
 
     public static void readTextShort() {
@@ -324,31 +359,34 @@ public class Helper {
         return str;
     }
 
-    public static long nowTime() {
-        long time = 0;
-        try {
-            time = (new Date()).getTime();
-        } catch (Exception e) {
-        }
-        return time;
-    }
-
-    public static void recordLogHasDismissDialog(List<Boolean> dataList) {
+    public static void recordLogHasDismissDialog(List<Boolean> dataList,long startTime) {
+        LogUtils.i("opetate : removeRedundancyDialog waste " + (System.currentTimeMillis() - startTime));
         if (dataList != null) {
             for (boolean flag : dataList) {
                 if (flag) {
-                    LogUtils.i("处理弹出窗口.....");
+                    LogUtils.i("operate : remove dialog");
                     break;
                 }
             }
         }
     }
 
-    public static void recordLogCoin(String tag, String coin) {
-        if (TextUtils.isEmpty(coin)) {
-            coin = "null";
+    public static String contractIntStr(String s) {
+        s = s.replaceAll(",", "");
+        Pattern pattern = Pattern.compile("\\d+");
+        Matcher matcher = pattern.matcher(s);
+        if (matcher.find()) {
+            return matcher.group();
         }
-        LogUtils.i(String.format(tag + " time= %s , now coin=%s", nowTimeStr(), coin));
+        return null;
+    }
+
+    public static int parseInt(String s) {
+        try {
+            return Integer.parseInt(s);
+        } catch (Exception e) {
+        }
+        return 0;
     }
 
 }

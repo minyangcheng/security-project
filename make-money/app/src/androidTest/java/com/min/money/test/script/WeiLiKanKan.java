@@ -35,16 +35,22 @@ public class WeiLiKanKan extends BaseAuto {
     }
 
     @Override
-    protected void recordCoin() {
+    protected int getNowCoin() {
         if (Helper.click(mDevice, By.text("我的"))) {
-            LogUtils.i("查看金币，进入我的页面");
             removeRedundancyDialog();
-            Helper.recordLogCoin(mTag, Helper.getText(mDevice, By.res("cn.weli.story:id/text_today_coin")));
+            Helper.slideVertical(mDevice, 0.2f, 0.9f);
+            UiObject2 uiObj = Helper.findObjectInCertainTime(mDevice, By.res("cn.weli.story:id/text_today_coin"));
+            if (uiObj != null) {
+                String coinStr = Helper.getText(uiObj);
+                return Helper.parseInt(Helper.contractIntStr(coinStr));
+            }
         }
+        return 0;
     }
 
     @Override
     protected void removeRedundancyDialog() {
+        long startTime = System.currentTimeMillis();
         List<Boolean> dataList = new ArrayList<>();
         dataList.add(Helper.click(mDevice, By.res("cn.weli.story:id/iv_take")));
         dataList.add(Helper.click(mDevice, By.res("cn.weli.story:id/iv_close")));
@@ -52,7 +58,7 @@ public class WeiLiKanKan extends BaseAuto {
         dataList.add(Helper.click(mDevice, By.res("cn.weli.story:id/bt_ok")));
         dataList.add(Helper.click(mDevice, By.res("cn.weli.story:id/image_close")));
         dataList.add(Helper.click(mDevice, By.res("cn.weli.story:id/text_ok")));
-        Helper.recordLogHasDismissDialog(dataList);
+        Helper.recordLogHasDismissDialog(dataList, startTime);
     }
 
     public void newsPage() {

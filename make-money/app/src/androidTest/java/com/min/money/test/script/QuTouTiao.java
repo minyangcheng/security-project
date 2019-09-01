@@ -39,16 +39,22 @@ public class QuTouTiao extends BaseAuto {
     }
 
     @Override
-    protected void recordCoin() {
+    protected int getNowCoin() {
         if (Helper.click(mDevice, By.text("我的"))) {
-            LogUtils.i("查看金币，进入我的页面");
             removeRedundancyDialog();
-            Helper.recordLogCoin(mTag, Helper.getText(mDevice, By.res("com.jifen.qukan:id/tx")));
+            Helper.slideVertical(mDevice, 0.2f, 0.9f);
+            UiObject2 uiObj = Helper.findObjectInCertainTime(mDevice, By.res("com.jifen.qukan:id/tx"));
+            if (uiObj != null) {
+                String coinStr = Helper.getText(uiObj);
+                return Helper.parseInt(Helper.contractIntStr(coinStr));
+            }
         }
+        return 0;
     }
 
     @Override
     protected void removeRedundancyDialog() {
+        long startTime = System.currentTimeMillis();
         List<Boolean> dataList = new ArrayList<>();
         dataList.add(Helper.click(mDevice, By.res("com.jifen.qukan:id/rb").text("以后更新")));
         dataList.add(Helper.click(mDevice, By.res("com.jifen.qukan:id/a4j").text("先去逛逛")));
@@ -56,7 +62,7 @@ public class QuTouTiao extends BaseAuto {
         dataList.add(Helper.click(mDevice, By.res("com.jifen.qukan:id/pl")));
         dataList.add(Helper.click(mDevice, By.res("com.jifen.qukan:id/og")));
         dataList.add(Helper.click(mDevice, By.res("com.jifen.qukan:id/nu")));
-        Helper.recordLogHasDismissDialog(dataList);
+        Helper.recordLogHasDismissDialog(dataList,startTime);
     }
 
     public void newsPage() {
@@ -71,10 +77,8 @@ public class QuTouTiao extends BaseAuto {
                     if (checkItemHasOperate(tempStr)) {
                         continue;
                     }
-                    mRecordSet.add(tempStr.hashCode());
                     if (Helper.clickRandom(uiObj, 0.8f)) {
                         LogUtils.i("点击进入标题页面：" + tempStr);
-                        Helper.readTextLong();
                         newsDetailPage();
                         mDevice.pressBack();
                         LogUtils.i("点击返回键退出标题页面");
@@ -89,7 +93,6 @@ public class QuTouTiao extends BaseAuto {
 
     public void minePage() {
         removeRedundancyDialog();
-
         String[] textArr = {"我的金币", "提现兑换", "提现记录", "历史记录"};
         Helper.openPageRandom(mDevice, textArr);
     }

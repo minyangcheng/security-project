@@ -15,7 +15,7 @@ public class YueTouTiao extends BaseAuto {
     }
 
     @Override
-    public void operate() throws Exception {
+    public void operate() {
         for (int i = 0; i < 2; i++) {
             Utils.sleepRandomSecond(2, 4);
             newsPage();
@@ -33,7 +33,7 @@ public class YueTouTiao extends BaseAuto {
         }
     }
 
-    public void newsPage() throws Exception {
+    public void newsPage() {
         int step = Utils.getRandom(mMinCycleValue, mMaxCycleValue);
         for (int i = 0; i < step; i++) {
             Utils.click(mDevice, By.res("com.expflow.reading:id/tv_read_time_rule_know"));
@@ -55,20 +55,20 @@ public class YueTouTiao extends BaseAuto {
         }
     }
 
-    public void minePage() throws Exception {
+    public void minePage() {
         Utils.click(mDevice, By.res("com.jifen.qukan:id/pl"));
 
         String[] textArr = {"今日金币", "提现中心", "提现记录", "我的消息"};
         Utils.openPageRandom(mDevice, textArr);
     }
 
-    public void newsDetailPage() throws Exception {
+    public void newsDetailPage() {
         Utils.click(mDevice, By.res("com.jifen.qukan:id/pl"));
 
         Utils.readPage(mDevice);
     }
 
-    public void taskPage() throws Exception {
+    public void taskPage() {
         Utils.click(mDevice, By.res("com.jifen.qukan:id/pl"));
 
         Utils.slideVertical(mDevice, 0.4f, 0.2f);
@@ -76,7 +76,7 @@ public class YueTouTiao extends BaseAuto {
         Utils.slideVertical(mDevice, 0.4f, 0.2f);
     }
 
-    public void videoPage() throws Exception {
+    public void videoPage() {
         int step = Utils.getRandom(mMinCycleValue, mMaxCycleValue);
         for (int i = 0; i < step; i++) {
             Utils.click(mDevice, By.res("com.jifen.qukan:id/pl"));

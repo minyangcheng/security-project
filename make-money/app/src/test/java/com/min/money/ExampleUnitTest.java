@@ -2,13 +2,8 @@ package com.min.money;
 
 import org.junit.Test;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Random;
-import java.util.Set;
-
-import static org.junit.Assert.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Example local unit test, which will execute on the development machine (host).
@@ -25,9 +20,16 @@ public class ExampleUnitTest {
 //        sleepRandomSecond(5);
 //        sleepRandomSecond(5,10);
 
-        Set<Integer> hasClickSet = new HashSet<>();
-        hasClickSet.add(1);
-        System.out.println(hasClickSet.contains(2));
+//        Set<Integer> hasClickSet = new HashSet<>();
+//        hasClickSet.add(1);
+//        System.out.println(hasClickSet.contains(2));
+        String s = "1我们23我们";
+        Pattern pattern = Pattern.compile("\\d+");
+        Matcher matcher = pattern.matcher(s);
+        if (matcher.find()) {
+            System.out.println(matcher.group());
+        }
+
     }
 
     /**
