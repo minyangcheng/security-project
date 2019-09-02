@@ -60,33 +60,6 @@ public class MainActivity extends AppCompatActivity {
         AppUtils.installApp(destFile.getAbsolutePath());
     }
 
-    @OnClick(R.id.btn_install_qukandian)
-    void installQuKanDian() {
-        ToastUtils.showShort("准备安装中....");
-        File destFile = new File(this.getExternalCacheDir(), "qukandian.apk");
-        FileUtil.copyAssetsFileToStorage(this, "qukandian.apk", destFile.getAbsolutePath());
-        LogUtils.d("copy qutoutiao apk success : " + destFile.getAbsolutePath());
-        AppUtils.installApp(destFile.getAbsolutePath());
-    }
-
-    @OnClick(R.id.btn_install_zqkd)
-    void installZQKD() {
-        ToastUtils.showShort("准备安装中....");
-        File destFile = new File(this.getExternalCacheDir(), "zhongqingkandian.apk");
-        FileUtil.copyAssetsFileToStorage(this, "zhongqingkandian.apk", destFile.getAbsolutePath());
-        LogUtils.d("copy qutoutiao apk success :" + destFile.getAbsolutePath());
-        AppUtils.installApp(destFile.getAbsolutePath());
-    }
-
-    @OnClick(R.id.btn_install_yuetoutiao)
-    void installYueTouTiao() {
-        ToastUtils.showShort("准备安装中....");
-        File destFile = new File(this.getExternalCacheDir(), "yuetoutiao.apk");
-        FileUtil.copyAssetsFileToStorage(this, "yuetoutiao.apk", destFile.getAbsolutePath());
-        LogUtils.d("copy qutoutiao apk success : " + destFile.getAbsolutePath());
-        AppUtils.installApp(destFile.getAbsolutePath());
-    }
-
     @OnClick(R.id.btn_install_auto)
     void installAuto() {
         ToastUtils.showShort("准备安装中....");

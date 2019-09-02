@@ -6,6 +6,7 @@ import android.support.test.uiautomator.UiObject2;
 import com.blankj.utilcode.util.LogUtils;
 import com.min.money.test.BaseAuto;
 import com.min.money.test.util.Helper;
+import com.nostra13.universalimageloader.utils.L;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,21 +40,24 @@ public class QuTouTiao extends BaseAuto {
     }
 
     @Override
-    protected int getNowCoin() {
+    protected int recordCoin() {
         if (Helper.click(mDevice, By.text("我的"))) {
-            removeRedundancyDialog();
+            L.i("进入我的页面查看当前金币");
+            handleDialog();
             Helper.slideVertical(mDevice, 0.2f, 0.9f);
             UiObject2 uiObj = Helper.findObjectInCertainTime(mDevice, By.res("com.jifen.qukan:id/tx"));
             if (uiObj != null) {
                 String coinStr = Helper.getText(uiObj);
-                return Helper.parseInt(Helper.contractIntStr(coinStr));
+                coinStr = Helper.contractIntStr(coinStr);
+                L.i("当前金币为：" + coinStr);
+                return Helper.parseInt(coinStr);
             }
         }
         return 0;
     }
 
     @Override
-    protected void removeRedundancyDialog() {
+    protected void handleDialog() {
         long startTime = System.currentTimeMillis();
         List<Boolean> dataList = new ArrayList<>();
         dataList.add(Helper.click(mDevice, By.res("com.jifen.qukan:id/rb").text("以后更新")));
@@ -62,13 +66,13 @@ public class QuTouTiao extends BaseAuto {
         dataList.add(Helper.click(mDevice, By.res("com.jifen.qukan:id/pl")));
         dataList.add(Helper.click(mDevice, By.res("com.jifen.qukan:id/og")));
         dataList.add(Helper.click(mDevice, By.res("com.jifen.qukan:id/nu")));
-        Helper.recordLogHasDismissDialog(dataList,startTime);
+        Helper.recordLogHasDismissDialog(dataList, startTime);
     }
 
     public void newsPage() {
         int step = Helper.getRandomInRange(mMinCycleValue, mMaxCycleValue);
         for (int i = 0; i < step; i++) {
-            removeRedundancyDialog();
+            handleDialog();
 
             List<UiObject2> uiObjList = mDevice.findObjects(By.res("com.jifen.qukan:id/xx"));
             for (UiObject2 uiObj : uiObjList) {
@@ -92,18 +96,18 @@ public class QuTouTiao extends BaseAuto {
     }
 
     public void minePage() {
-        removeRedundancyDialog();
+        handleDialog();
         String[] textArr = {"我的金币", "提现兑换", "提现记录", "历史记录"};
         Helper.openPageRandom(mDevice, textArr);
     }
 
     public void newsDetailPage() {
-        removeRedundancyDialog();
+        handleDialog();
         Helper.readPage(mDevice);
     }
 
     public void taskPage() {
-        removeRedundancyDialog();
+        handleDialog();
         Helper.slideVertical(mDevice, 0.4f, 0.2f);
         Helper.readTextShort();
         Helper.slideVertical(mDevice, 0.4f, 0.2f);
@@ -112,7 +116,7 @@ public class QuTouTiao extends BaseAuto {
     public void videoPage() {
         int step = Helper.getRandomInRange(mMinCycleValue, mMaxCycleValue);
         for (int i = 0; i < step; i++) {
-            removeRedundancyDialog();
+            handleDialog();
 
             List<UiObject2> uiObjList = mDevice.findObjects(By.res("com.jifen.qukan:id/a3b"));
             for (UiObject2 uiObj : uiObjList) {

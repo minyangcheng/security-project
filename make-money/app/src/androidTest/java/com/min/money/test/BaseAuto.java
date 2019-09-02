@@ -17,12 +17,15 @@ public abstract class BaseAuto {
 
     protected String mTag;
 
-    protected int mMinCycleValue = 20;
-    protected int mMaxCycleValue = 40;
+    protected int mMinCycleValue = 30;
+    protected int mMaxCycleValue = 50;
     protected int mOperateTimes = 1;
 
     protected String mPackageName;
     protected UiDevice mDevice;
+
+    protected int mNowCoin;
+    protected int mWorkCoin;
 
     protected Set<Integer> mRecordSet = new HashSet<>();
 
@@ -38,32 +41,26 @@ public abstract class BaseAuto {
 
     protected void run() {
         checkRightTime();
+
         LogUtils.i(String.format("%s operate start, time:%s", mTag, Helper.nowTimeStr()));
         long startTime = System.currentTimeMillis();
         doWork();
         long workingTime = System.currentTimeMillis() - startTime;
         String fitWorkingTimeStr = ConvertUtils.millis2FitTimeSpan(workingTime, 4);
-
-        String coinKey = mPackageName + "-coin";
-        int lastCoin = SPStaticUtils.getInt(coinKey, -1);
-        int nowCoin = getNowCoin();
-        String workingCoinStr = "";
-        if (lastCoin == -1 || nowCoin < lastCoin) {
-            workingCoinStr = "no";
-        } else {
-            workingCoinStr = (nowCoin - lastCoin) + "";
-        }
-        SPStaticUtils.put(coinKey, nowCoin);
         LogUtils.i(String.format("%s operate finish, time:%s workTime:%s nowCoin:%s workCoin:%s",
-                mTag, Helper.nowTimeStr(), fitWorkingTimeStr, nowCoin, workingCoinStr));
+                mTag, Helper.nowTimeStr(), fitWorkingTimeStr, mNowCoin, mWorkCoin));
+
+
     }
 
     private void doWork() {
         try {
             Helper.wakeUpDevice(mDevice);
             Helper.openAppSafe(mDevice, mPackageName);
-            removeRedundancyDialog();
+            handleDialog();
             operate();
+            mNowCoin = recordCoin(); // 记录coin值，便于计算此次工作生产出的coin
+            mWorkCoin = calculateWorkCoin();
             backAppToHome();
         } catch (Exception e) {
             LogUtils.e(e);
@@ -80,11 +77,21 @@ public abstract class BaseAuto {
 
     protected abstract void operate();
 
-    protected void removeRedundancyDialog() {
+    protected void handleDialog() {
     }
 
-    protected int getNowCoin() {
-        return 0;
+    protected int recordCoin() {
+        return -1;
+    }
+
+    private int calculateWorkCoin() {
+        String coinKey = mPackageName + "-coin";
+        int lastCoin = SPStaticUtils.getInt(coinKey, 0);
+        int workCoin = 0;
+        if (lastCoin > 0 && mNowCoin > 0 && mNowCoin > lastCoin) {
+            workCoin = mNowCoin - lastCoin;
+        }
+        return workCoin;
     }
 
     protected void checkRightTime() {

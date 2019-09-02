@@ -2,11 +2,13 @@ package com.min.money.test.util;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.PowerManager;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.uiautomator.By;
 import android.support.test.uiautomator.BySelector;
 import android.support.test.uiautomator.UiDevice;
 import android.support.test.uiautomator.UiObject2;
+import android.support.test.uiautomator.Until;
 import android.widget.TextView;
 
 import com.blankj.utilcode.util.LogUtils;
@@ -33,17 +35,31 @@ public class Helper {
     /**
      * 唤醒屏幕
      */
-    public static void wakeUpDevice(UiDevice device) throws Exception {
-        device.pressHome();
-        if (!device.isScreenOn()) {
-            LogUtils.i("operate : wake up screen");
-            device.wakeUp();
+    public static void wakeUpDevice(UiDevice device) {
+        try {
+            device.pressHome();
+            brightScreen();
+            String launcherPackage = device.getLauncherPackageName();
+            if (!device.hasObject(By.pkg(launcherPackage).depth(0))) {
+                slideVertical(device, 0.8f, 0.1f);
+                LogUtils.i("operate : unlock mobile");
+                sleep(1500);
+            }
+            device.pressHome();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-        String launcherPackage = device.getLauncherPackageName();
-        if (!device.hasObject(By.pkg(launcherPackage).depth(0))) {
-            slideVertical(device, 0.8f, 0.1f);
-            LogUtils.i("operate : unlock mobile");
-            sleep(1500);
+    }
+
+    public static void brightScreen() {
+        Context context = InstrumentationRegistry.getInstrumentation().getContext();
+        PowerManager pm = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
+        boolean screenOn = pm.isScreenOn();
+        if (!screenOn) {
+            LogUtils.i("operate : wake up screen");
+            PowerManager.WakeLock wl = pm.newWakeLock(PowerManager.ACQUIRE_CAUSES_WAKEUP | PowerManager.SCREEN_BRIGHT_WAKE_LOCK, "bright");
+            wl.acquire(10000);
+            wl.release();
         }
     }
 
@@ -62,9 +78,9 @@ public class Helper {
      * 安全的方式打开app
      */
     public static void openAppSafe(UiDevice device, String packageName) {
-        while (!device.hasObject(By.pkg(packageName))) {
+        while (!device.hasObject(By.pkg(packageName).depth(0))) {
             openApp(packageName);
-            sleep(6000);
+            sleep(8000);
         }
     }
 
@@ -113,8 +129,10 @@ public class Helper {
         int height = device.getDisplayHeight();
         boolean flag = device.click((int) (width * x), (int) (height * y));
         if (flag) {
-            LogUtils.i("operate : click");
             sleep(OPERATE_CLICK_MIN_WAIT_TIME, OPERATE_CLICK_MAX_WAIT_TIME);
+            LogUtils.i("operate : click success");
+        } else {
+            LogUtils.i("operate : click fail");
         }
         return flag;
     }
@@ -123,17 +141,17 @@ public class Helper {
      * 点击
      */
     public static boolean click(UiObject2 uiObj) {
-        boolean flag = false;
         try {
             if (uiObj != null) {
-                LogUtils.i("operate : click");
                 uiObj.click();
-                flag = true;
                 sleep(OPERATE_CLICK_MIN_WAIT_TIME, OPERATE_CLICK_MAX_WAIT_TIME);
+                LogUtils.i("operate : click success");
+                return true;
             }
         } catch (Exception e) {
+            LogUtils.i("operate : click fail");
         }
-        return flag;
+        return false;
     }
 
     /**
@@ -143,15 +161,8 @@ public class Helper {
      * @param selector
      */
     public static boolean click(UiDevice device, BySelector selector) {
-        boolean flag = false;
-        try {
-            if (device.hasObject(selector)) {
-                UiObject2 uiObj = device.findObject(selector);
-                return click(uiObj);
-            }
-        } catch (Exception e) {
-        }
-        return flag;
+        UiObject2 uiObj = device.findObject(selector);
+        return click(uiObj);
     }
 
     /**
@@ -162,24 +173,12 @@ public class Helper {
      * @return
      */
     public static boolean clickRandom(UiObject2 uiObj, float percent) {
-        boolean flag = false;
-        try {
-            if (Math.random() <= percent) {
-                flag = click(uiObj);
-            }
-        } catch (Exception e) {
-        }
-        return flag;
+        return Math.random() <= percent && click(uiObj);
     }
 
     public static boolean clickRandom(UiDevice device, BySelector selector, float percent) {
-        boolean flag = false;
-        try {
-            UiObject2 uiObj = device.findObject(selector);
-            return clickRandom(uiObj, percent);
-        } catch (Exception e) {
-        }
-        return flag;
+        UiObject2 uiObj = device.findObject(selector);
+        return clickRandom(uiObj, percent);
     }
 
     /**
@@ -206,7 +205,6 @@ public class Helper {
     public static void openPageRandom(UiDevice device, String[] pageTexts) {
         Random random = new Random();
         int times = random.nextInt(4);
-        LogUtils.i("随机打开页面开始，次数：" + times);
         for (int i = 0; i < times; i++) {
             int temp = random.nextInt(pageTexts.length);
             if (click(device, By.text(pageTexts[temp]))) {
@@ -217,7 +215,6 @@ public class Helper {
             }
             slideVertical(device, 0.3f, 0.2f);
         }
-        LogUtils.i("随机打开页面完毕");
     }
 
     public static void slideHorizontalRight(UiDevice device) {
@@ -225,11 +222,11 @@ public class Helper {
     }
 
     public static void slideHorizontal(UiDevice device, float start, float end) {
-        LogUtils.i("operate :  slideHorizontal");
         int width = device.getDisplayWidth();
         int height = device.getDisplayHeight();
         device.swipe((int) (width * start), height / 2, (int) (width * end), height / 2, 100);
         sleep(OPERATE_SLIDE_MIN_WAIT_TIME, OPERATE_SLIDE_MAX_WAIT_TIME);
+        LogUtils.i("operate :  slideHorizontal");
     }
 
     public static void slideVerticalUp(UiDevice device) {
@@ -237,91 +234,40 @@ public class Helper {
     }
 
     public static void slideVertical(UiDevice device, float start, float end) {
-        LogUtils.i("operate :  slideVertical");
         int width = device.getDisplayWidth();
         int height = device.getDisplayHeight();
         device.swipe(width / 2, (int) (height * start), width / 2, (int) (height * end), 100);
         sleep(OPERATE_SLIDE_MIN_WAIT_TIME, OPERATE_SLIDE_MAX_WAIT_TIME);
+        LogUtils.i("operate :  slideVertical");
     }
 
-    public static void closeAPP(String packageName) {
+    public static void closeApp(String packageName) {
         RootCmd.execRootCmdSilent("am force-stop " + packageName);
         LogUtils.i("operate : close app " + packageName);
     }
 
     public static String getText(UiObject2 uiObj, BySelector selector) {
-        try {
-            UiObject2 textUiObj2 = uiObj.findObject(selector);
-            return textUiObj2.getText();
-        } catch (Exception e) {
-        }
-        return "";
+        UiObject2 textUiObj = uiObj.findObject(selector);
+        return getText(textUiObj);
     }
 
     public static String getText(UiDevice device, BySelector selector) {
-        try {
-            UiObject2 textUiObj2 = device.findObject(selector);
-            return textUiObj2.getText();
-        } catch (Exception e) {
-        }
-        return "";
+        UiObject2 uiObj = device.findObject(selector);
+        return getText(uiObj);
     }
 
     public static String getText(UiObject2 uiObj) {
         try {
-            return uiObj.getText();
+            if (uiObj != null) {
+                return uiObj.getText();
+            }
         } catch (Exception e) {
         }
         return "";
     }
 
-    public static boolean judgeBrotherNode(UiDevice device, BySelector selfSelector, BySelector brotherSelector) {
-        try {
-            if (device.hasObject(selfSelector)) {
-                UiObject2 uiObj = device.findObject(selfSelector);
-                if (uiObj.getParent().hasObject(brotherSelector)) {
-                    return true;
-                }
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return false;
-    }
-
-    public static boolean arrivePageSafe(UiDevice device, BySelector selector) {
-        UiObject2 object = null;
-        int timeout = 8000;
-        int delay = 2000;
-        long time = System.currentTimeMillis();
-        while (object == null) {
-            object = device.findObject(selector);
-            if (object == null) {
-                if (System.currentTimeMillis() - time > timeout) {
-                    break;
-                }
-                device.pressBack();
-                sleep(delay);
-            }
-        }
-        return object != null;
-    }
-
     public static UiObject2 findObjectInCertainTime(UiDevice device, BySelector selector) {
-        UiObject2 object = null;
-        int timeout = 8000;
-        int delay = 2000;
-        long time = System.currentTimeMillis();
-        while (object == null) {
-            object = device.findObject(selector);
-            if (object == null) {
-                sleep(delay);
-                if (System.currentTimeMillis() - time > timeout) {
-                    break;
-                }
-            }
-        }
-        return object;
+        return device.wait(Until.findObject(selector), 8000);
     }
 
     public static boolean waitUiObjAppear(UiDevice device, BySelector selector) {
@@ -331,6 +277,7 @@ public class Helper {
     public static int getRandomInRange(int min, int max) {
         Random random = new Random();
         int temp = min + random.nextInt(max - min + 1);
+        //todo
         return 2;
     }
 
@@ -343,7 +290,8 @@ public class Helper {
     }
 
     public static void readVideoShort() {
-        Helper.sleep(20000, 30000);
+        //todo
+        Helper.sleep(5000, 10000);
     }
 
     public static void readVideoLong() {
@@ -359,16 +307,16 @@ public class Helper {
         return str;
     }
 
-    public static void recordLogHasDismissDialog(List<Boolean> dataList,long startTime) {
-        LogUtils.i("opetate : removeRedundancyDialog waste " + (System.currentTimeMillis() - startTime));
+    public static void recordLogHasDismissDialog(List<Boolean> dataList, long startTime) {
         if (dataList != null) {
             for (boolean flag : dataList) {
                 if (flag) {
-                    LogUtils.i("operate : remove dialog");
-                    break;
+                    LogUtils.i("operate : handle dialog success waste time:" + (System.currentTimeMillis() - startTime));
+                    return;
                 }
             }
         }
+        LogUtils.i("operate : handle dialog nothing waste " + (System.currentTimeMillis() - startTime));
     }
 
     public static String contractIntStr(String s) {

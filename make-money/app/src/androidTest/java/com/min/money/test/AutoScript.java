@@ -8,7 +8,6 @@ import com.min.money.test.script.DongFangTiao;
 import com.min.money.test.script.QuTouTiao;
 import com.min.money.test.script.WeiLiKanKan;
 import com.min.money.test.util.Helper;
-import com.min.money.test.util.Utils;
 
 import org.junit.After;
 import org.junit.Before;
@@ -20,7 +19,7 @@ public class AutoScript {
 
     @Before
     public void before() {
-        String startTimeStr = Utils.nowTimeStr();
+        String startTimeStr = Helper.nowTimeStr();
         SPStaticUtils.put("start_time", startTimeStr);
         SPStaticUtils.put("end_time", "");
 
@@ -29,17 +28,17 @@ public class AutoScript {
 
     @Test
     public void startAutoScript() {
-        while (true) {
-            BaseAuto.start(new QuTouTiao());
-            BaseAuto.start(new WeiLiKanKan());
-            BaseAuto.start(new DongFangTiao());
-            Helper.sleep(5000, 8000);
-        }
+//        while (true) {
+        BaseAuto.start(new QuTouTiao());
+        BaseAuto.start(new WeiLiKanKan());
+//        BaseAuto.start(new DongFangTiao());
+//            Helper.sleep(5000, 8000);
+//        }
     }
 
     @After
     public void after() {
-        String finishTimeStr = Utils.nowTimeStr();
+        String finishTimeStr = Helper.nowTimeStr();
         SPStaticUtils.put("end_time", finishTimeStr);
 
         LogUtils.i("application finish time:" + finishTimeStr);

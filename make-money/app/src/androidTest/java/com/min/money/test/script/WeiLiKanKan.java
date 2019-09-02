@@ -6,6 +6,7 @@ import android.support.test.uiautomator.UiObject2;
 import com.blankj.utilcode.util.LogUtils;
 import com.min.money.test.BaseAuto;
 import com.min.money.test.util.Helper;
+import com.nostra13.universalimageloader.utils.L;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,21 +36,24 @@ public class WeiLiKanKan extends BaseAuto {
     }
 
     @Override
-    protected int getNowCoin() {
+    protected int recordCoin() {
         if (Helper.click(mDevice, By.text("我的"))) {
-            removeRedundancyDialog();
+            L.i("进入我的页面查看当前金币");
+            handleDialog();
             Helper.slideVertical(mDevice, 0.2f, 0.9f);
             UiObject2 uiObj = Helper.findObjectInCertainTime(mDevice, By.res("cn.weli.story:id/text_today_coin"));
             if (uiObj != null) {
                 String coinStr = Helper.getText(uiObj);
-                return Helper.parseInt(Helper.contractIntStr(coinStr));
+                coinStr = Helper.contractIntStr(coinStr);
+                L.i("当前金币为：" + coinStr);
+                return Helper.parseInt(coinStr);
             }
         }
         return 0;
     }
 
     @Override
-    protected void removeRedundancyDialog() {
+    protected void handleDialog() {
         long startTime = System.currentTimeMillis();
         List<Boolean> dataList = new ArrayList<>();
         dataList.add(Helper.click(mDevice, By.res("cn.weli.story:id/iv_take")));
@@ -64,14 +68,14 @@ public class WeiLiKanKan extends BaseAuto {
     public void newsPage() {
         int step = Helper.getRandomInRange(mMinCycleValue, mMaxCycleValue);
         for (int i = 0; i < step; i++) {
-            removeRedundancyDialog();
+            handleDialog();
 
             List<UiObject2> uiObjList = mDevice.findObjects(By.res("cn.weli.story:id/tv_title"));
             for (UiObject2 uiObj : uiObjList) {
                 try {
                     if (uiObj.getParent().findObject(By.res("cn.weli.story:id/ll_open")) != null) {
                         Helper.click(uiObj);
-                        removeRedundancyDialog();
+                        handleDialog();
                     } else {
                         String tempStr = uiObj.getText();
                         if (checkItemHasOperate(tempStr)) {
@@ -95,7 +99,7 @@ public class WeiLiKanKan extends BaseAuto {
     }
 
     public void minePage() {
-        removeRedundancyDialog();
+        handleDialog();
 
         if (Helper.click(mDevice, By.textContains("立即签到"))) {
             Helper.click(mDevice, By.clazz("android.widget.Button").text("立即签到"));
@@ -106,7 +110,7 @@ public class WeiLiKanKan extends BaseAuto {
     }
 
     public void newsDetailPage() {
-        removeRedundancyDialog();
+        handleDialog();
         Helper.readPage(mDevice);
     }
 

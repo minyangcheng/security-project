@@ -48,49 +48,50 @@ public class DongFangTiao extends BaseAuto {
     }
 
     @Override
-    protected int getNowCoin() {
+    protected int recordCoin() {
         if (Helper.click(mDevice, By.text("我的"))) {
-            removeRedundancyDialog();
+            L.i("进入我的页面查看当前金币");
+            handleDialog();
             Helper.slideVertical(mDevice, 0.2f, 0.9f);
             UiObject2 uiObj = Helper.findObjectInCertainTime(mDevice, By.res("com.songheng.eastnews:id/aoz"));
             if (uiObj != null) {
                 String coinStr = Helper.getText(uiObj);
-                return Helper.parseInt(Helper.contractIntStr(coinStr));
+                coinStr = Helper.contractIntStr(coinStr);
+                L.i("当前金币为：" + coinStr);
+                return Helper.parseInt(coinStr);
             }
         }
         return 0;
     }
 
     @Override
-    protected void removeRedundancyDialog() {
+    protected void handleDialog() {
         long startTime = System.currentTimeMillis();
         List<Boolean> dataList = new ArrayList<>();
-        if (!mDevice.hasObject(By.res("com.songheng.eastnews:id/aee")) && !mDevice.hasObject(By.res("cn.weli.story:id/tv_nav_title\n"))) {
+        if (!mDevice.hasObject(By.res("com.songheng.eastnews:id/a6_")) && !mDevice.hasObject(By.res("com.songheng.eastnews:id/yt"))) {
             dataList.add(Helper.click(mDevice, By.res("com.songheng.eastnews:id/vf")));
             dataList.add(Helper.click(mDevice, By.res("com.songheng.eastnews:id/ua")));
             dataList.add(Helper.click(mDevice, By.res("com.songheng.eastnews:id/e4")));
             dataList.add(Helper.click(mDevice, By.res("com.songheng.eastnews:id/fq")));
             dataList.add(Helper.click(mDevice, By.res("com.songheng.eastnews:id/pu")));
-            LogUtils.i("当前进行判断");
-        }else{
-            LogUtils.i("去掉进行判断");
         }
         Helper.recordLogHasDismissDialog(dataList, startTime);
+        Helper.brightScreen();
     }
 
     public void newsPage() {
         int step = Helper.getRandomInRange(mMinCycleValue, mMaxCycleValue);
         for (int i = 0; i < step; i++) {
-            removeRedundancyDialog();
+            handleDialog();
 
             List<UiObject2> uiObjList = mDevice.findObjects(By.res("com.songheng.eastnews:id/asg"));
             for (UiObject2 uiObj : uiObjList) {
                 try {
                     String tempStr = Helper.getText(uiObj.getParent().getParent(), By.res("com.songheng.eastnews:id/auu"));
-                    if (checkItemHasOperate(tempStr)) {
+                    if (checkItemHasOperate(tempStr) || tempStr.contains("六张海报")) {
                         continue;
                     }
-                    if (Helper.clickRandom(uiObj, 1f)) {
+                    if (Helper.clickRandom(uiObj, 0.8f)) {
                         LogUtils.i("点击进入标题页面：" + tempStr);
                         newsDetailPage();
                         mDevice.pressBack();
@@ -106,31 +107,31 @@ public class DongFangTiao extends BaseAuto {
     }
 
     public void taskPage() {
-        removeRedundancyDialog();
+        handleDialog();
         Helper.slideVertical(mDevice, 0.5f, 0.3f);
         Helper.readTextShort();
     }
 
     public void newsDetailPage() {
-        removeRedundancyDialog();
+        handleDialog();
         Helper.readPage(mDevice);
     }
 
     public void minePage() {
-        removeRedundancyDialog();
+        handleDialog();
         String[] textArr = {"立即体现", "我的钱包", "邀请好友", "我的消息", "游戏中心"};
         Helper.openPageRandom(mDevice, textArr);
     }
 
     public void gamePage() {
-        removeRedundancyDialog();
+        handleDialog();
         Helper.readTextShort();
     }
 
     public void videoPage() {
         int step = Helper.getRandomInRange(mMinCycleValue, mMaxCycleValue);
         for (int i = 0; i < step; i++) {
-            removeRedundancyDialog();
+            handleDialog();
 
             List<UiObject2> uiObjList = mDevice.findObjects(By.res("com.songheng.eastnews:id/x7"));
             for (UiObject2 uiObj : uiObjList) {

@@ -140,8 +140,6 @@ dependencies {
 
     compile 'com.blankj:utilcode:1.23.7'
     compile 'com.nostra13.universalimageloader:universal-image-loader:1.9.5'
-
-    compile(name: 'RootShell', ext: 'aar')
 }
 
 def getGitVersion() {
