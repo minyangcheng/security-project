@@ -29,9 +29,9 @@ public class AutoScript {
     @Test
     public void startAutoScript() {
 //        while (true) {
-        BaseAuto.start(new QuTouTiao());
-        BaseAuto.start(new WeiLiKanKan());
-//        BaseAuto.start(new DongFangTiao());
+//        BaseAuto.start(new QuTouTiao());
+//        BaseAuto.start(new WeiLiKanKan());
+        BaseAuto.start(new DongFangTiao());
 //            Helper.sleep(5000, 8000);
 //        }
     }

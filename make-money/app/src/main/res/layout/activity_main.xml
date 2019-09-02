@@ -30,32 +30,18 @@
             android:text="安装微哩看看" />
 
         <Button
+            android:id="@+id/btn_install_huitoutiao"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:text="安装惠头条" />
+
+        <Button
             android:id="@+id/btn_install_dongfangtoutiao"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
             android:text="安装东方头条" />
-
-        <Button
-            android:id="@+id/btn_install_qukandian"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:text="安装趣看点" />
-
-        <Button
-            android:id="@+id/btn_install_zqkd"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:text="安装中青看点"/>
-
-        <Button
-            android:id="@+id/btn_install_yuetoutiao"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:text="安装悦头条" />
 
         <Button
             android:id="@+id/btn_install_auto"

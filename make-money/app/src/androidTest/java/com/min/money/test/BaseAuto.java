@@ -60,6 +60,7 @@ public abstract class BaseAuto {
             handleDialog();
             operate();
             mNowCoin = recordCoin(); // 记录coin值，便于计算此次工作生产出的coin
+            SPStaticUtils.put(mPackageName + "-coin", mNowCoin);
             mWorkCoin = calculateWorkCoin();
             backAppToHome();
         } catch (Exception e) {
@@ -85,8 +86,7 @@ public abstract class BaseAuto {
     }
 
     private int calculateWorkCoin() {
-        String coinKey = mPackageName + "-coin";
-        int lastCoin = SPStaticUtils.getInt(coinKey, 0);
+        int lastCoin = SPStaticUtils.getInt(mPackageName + "-coin", 0);
         int workCoin = 0;
         if (lastCoin > 0 && mNowCoin > 0 && mNowCoin > lastCoin) {
             workCoin = mNowCoin - lastCoin;

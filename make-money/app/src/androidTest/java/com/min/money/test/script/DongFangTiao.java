@@ -6,7 +6,6 @@ import android.support.test.uiautomator.UiObject2;
 import com.blankj.utilcode.util.LogUtils;
 import com.min.money.test.BaseAuto;
 import com.min.money.test.util.Helper;
-import com.nostra13.universalimageloader.utils.L;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -50,14 +49,14 @@ public class DongFangTiao extends BaseAuto {
     @Override
     protected int recordCoin() {
         if (Helper.click(mDevice, By.text("我的"))) {
-            L.i("进入我的页面查看当前金币");
+            LogUtils.i("进入我的页面查看当前金币");
             handleDialog();
             Helper.slideVertical(mDevice, 0.2f, 0.9f);
             UiObject2 uiObj = Helper.findObjectInCertainTime(mDevice, By.res("com.songheng.eastnews:id/aoz"));
             if (uiObj != null) {
                 String coinStr = Helper.getText(uiObj);
                 coinStr = Helper.contractIntStr(coinStr);
-                L.i("当前金币为：" + coinStr);
+                LogUtils.i("当前金币为：" + coinStr);
                 return Helper.parseInt(coinStr);
             }
         }
@@ -72,6 +71,7 @@ public class DongFangTiao extends BaseAuto {
             dataList.add(Helper.click(mDevice, By.res("com.songheng.eastnews:id/vf")));
             dataList.add(Helper.click(mDevice, By.res("com.songheng.eastnews:id/ua")));
             dataList.add(Helper.click(mDevice, By.res("com.songheng.eastnews:id/e4")));
+            Helper.brightScreen();
             dataList.add(Helper.click(mDevice, By.res("com.songheng.eastnews:id/fq")));
             dataList.add(Helper.click(mDevice, By.res("com.songheng.eastnews:id/pu")));
         }
