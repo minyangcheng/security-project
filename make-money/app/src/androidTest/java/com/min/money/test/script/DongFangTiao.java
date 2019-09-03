@@ -14,6 +14,8 @@ public class DongFangTiao extends BaseAuto {
 
     public DongFangTiao() {
         super("com.songheng.eastnews");
+        this.mMinCycleValue = 5;
+        this.mMaxCycleValue = 10;
     }
 
     @Override

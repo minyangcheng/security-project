@@ -59,9 +59,9 @@ public abstract class BaseAuto {
             Helper.openAppSafe(mDevice, mPackageName);
             handleDialog();
             operate();
-            mNowCoin = recordCoin(); // 记录coin值，便于计算此次工作生产出的coin
-            SPStaticUtils.put(mPackageName + "-coin", mNowCoin);
-            mWorkCoin = calculateWorkCoin();
+            mNowCoin = recordCoin(); // 获取当前coin值
+            mWorkCoin = calculateWorkCoin(); //计算此次工作生产出的coin
+            SPStaticUtils.put(mPackageName + "-coin", mNowCoin); //记录当前coin到文件中保存
             backAppToHome();
         } catch (Exception e) {
             LogUtils.e(e);

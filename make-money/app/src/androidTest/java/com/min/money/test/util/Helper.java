@@ -277,8 +277,7 @@ public class Helper {
     public static int getRandomInRange(int min, int max) {
         Random random = new Random();
         int temp = min + random.nextInt(max - min + 1);
-        //todo
-        return 2;
+        return temp;
     }
 
     public static void readTextShort() {
@@ -290,8 +289,7 @@ public class Helper {
     }
 
     public static void readVideoShort() {
-        //todo
-        Helper.sleep(5000, 10000);
+        Helper.sleep(20000, 30000);
     }
 
     public static void readVideoLong() {
