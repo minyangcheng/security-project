@@ -36,19 +36,15 @@ public class Helper {
      * 唤醒屏幕
      */
     public static void wakeUpDevice(UiDevice device) {
-        try {
-            device.pressHome();
-            brightScreen();
-            String launcherPackage = device.getLauncherPackageName();
-            if (!device.hasObject(By.pkg(launcherPackage).depth(0))) {
-                slideVertical(device, 0.8f, 0.1f);
-                LogUtils.i("operate : unlock mobile");
-                sleep(1500);
-            }
-            device.pressHome();
-        } catch (Exception e) {
-            e.printStackTrace();
+        brightScreen();
+        device.pressHome();
+        String launcherPackage = device.getLauncherPackageName();
+        if (!device.hasObject(By.pkg(launcherPackage).depth(0))) {
+            slideVertical(device, 0.8f, 0.1f);//上滑解锁
+            sleep(1500);
+            LogUtils.i("operate : unlock mobile");
         }
+        device.pressHome();
     }
 
     public static void brightScreen() {
@@ -56,22 +52,19 @@ public class Helper {
         PowerManager pm = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
         boolean screenOn = pm.isScreenOn();
         if (!screenOn) {
-            LogUtils.i("operate : wake up screen");
             PowerManager.WakeLock wl = pm.newWakeLock(PowerManager.ACQUIRE_CAUSES_WAKEUP | PowerManager.SCREEN_BRIGHT_WAKE_LOCK, "bright");
             wl.acquire(10000);
             wl.release();
+            sleep(1000);
+            LogUtils.i("operate : wake up screen");
         }
     }
 
-    /**
-     * 打开app
-     */
-    public static void openApp(String packageName) {
+    private static void openApp(String packageName) {
         Context context = InstrumentationRegistry.getContext();
         Intent intent = context.getPackageManager().getLaunchIntentForPackage(packageName);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
         context.startActivity(intent);
-        LogUtils.i("operate : open app " + packageName);
     }
 
     /**
@@ -81,6 +74,7 @@ public class Helper {
         while (!device.hasObject(By.pkg(packageName).depth(0))) {
             openApp(packageName);
             sleep(8000);
+            LogUtils.i("operate : open app " + packageName);
         }
     }
 

@@ -4,9 +4,7 @@ import android.support.test.runner.AndroidJUnit4;
 
 import com.blankj.utilcode.util.LogUtils;
 import com.blankj.utilcode.util.SPStaticUtils;
-import com.min.money.test.script.DongFangTiao;
-import com.min.money.test.script.QuTouTiao;
-import com.min.money.test.script.WeiLiKanKan;
+import com.min.money.test.script.HuiTouTiao;
 import com.min.money.test.util.Helper;
 
 import org.junit.After;
@@ -28,11 +26,12 @@ public class AutoScript {
 
     @Test
     public void startAutoScript() {
-        while (true) {
-            BaseAuto.start(new QuTouTiao());
-            BaseAuto.start(new WeiLiKanKan());
-            Helper.sleep(5000, 8000);
-        }
+//        while (true) {
+//            BaseAuto.start(new QuTouTiao());
+//            BaseAuto.start(new WeiLiKanKan());
+//            Helper.sleep(5000, 8000);
+//        }
+        BaseAuto.start(new HuiTouTiao());
     }
 
     @After
