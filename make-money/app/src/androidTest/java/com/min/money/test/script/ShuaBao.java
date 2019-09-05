@@ -23,22 +23,22 @@ public class ShuaBao extends BaseAuto {
                 LogUtils.i("进入首页页面");
                 mainPage();
             }
-            if (Helper.click(By.text("我的"))) {
-                LogUtils.i("进入我的页面");
+            if (Helper.click(By.text("我"))) {
+                LogUtils.i("进入我页面");
                 minePage();
-            }else {
+            } else {
                 Helper.pressBack();
             }
             if (Helper.click(By.text("任务"))) {
                 LogUtils.i("进入任务页面");
                 taskPage();
-            }else {
+            } else {
                 Helper.pressBack();
             }
-            if (Helper.click(By.text("关注"))) {
-                LogUtils.i("进入关注页面");
-                videoPage();
-            }else {
+            if (Helper.click(By.text("直播"))) {
+                LogUtils.i("进入直播页面");
+                livePage();
+            } else {
                 Helper.pressBack();
             }
         }
@@ -46,11 +46,11 @@ public class ShuaBao extends BaseAuto {
 
     @Override
     protected int recordCoin() {
-        if (Helper.click(By.text("我的"))) {
-            LogUtils.i("进入我的页面查看当前金币");
+        if (Helper.click(By.text("我"))) {
+            LogUtils.i("进入我页面查看当前金币");
             handleDialog();
             Helper.slideVertical(0.2f, 0.9f);
-            UiObject2 uiObj = Helper.findObjectInCertainTime(By.res("com.jifen.qukan:id/tx"));
+            UiObject2 uiObj = Helper.findObjectInCertainTime(By.res("com.jm.video:id/tv_gold_num"));
             if (uiObj != null) {
                 String coinStr = Helper.getText(uiObj);
                 coinStr = Helper.contractIntStr(coinStr);
@@ -65,57 +65,54 @@ public class ShuaBao extends BaseAuto {
     protected void handleDialog() {
         long startTime = System.currentTimeMillis();
         List<Boolean> dataList = new ArrayList<>();
+        dataList.add(Helper.click(By.res("com.jm.video:id/imgClose")));
         Helper.recordLogHasDismissDialog(dataList, startTime);
     }
 
     public void mainPage() {
-        int step = Helper.getRandomInRange(mMinCycleValue, mMaxCycleValue);
+        int step = Helper.getRandomInRange(1, 3);
         for (int i = 0; i < step; i++) {
-
+            String tempStr = Helper.getText(By.res("com.jm.video:id/desc"));
+            LogUtils.i("点击观看视频：" + tempStr);
             Helper.readVideoShort();
+            if (Helper.clickRandom(By.res("com.jm.video:id/praise"), 0.4f)) {
+                LogUtils.i("点赞...");
+            }
+            LogUtils.i("观看视频完毕");
             Helper.slideVerticalUp();
         }
     }
 
     public void minePage() {
-        String[] textArr = {"我的金币", "提现兑换", "提现记录", "历史记录"};
+        String[] textArr = {"关注", "粉丝", "当前余额(元)", "查看更多"};
         Helper.openPageRandom(textArr);
-    }
-
-    public void newsDetailPage() {
-        handleDialog();
-        Helper.readPage();
-
     }
 
     public void taskPage() {
         handleDialog();
-        Helper.slideVertical(0.4f, 0.2f);
-        Helper.readTextShort();
-        Helper.slideVertical(0.4f, 0.2f);
+        if (Helper.click(By.text("立即签到"))) {
+            if (Helper.click(By.text("看视频签到"))) {
+                Helper.readVideoShort();
+                UiObject2 tempObj = null;
+                while ((tempObj = Helper.findObject(By.res("com.jm.video:id/tt_video_ad_close"), 20 * 1000)) == null) {
+                    Helper.readVideoShort();
+                }
+                tempObj.click();
+                handleDialog();
+            }
+        }
     }
 
-    public void videoPage() {
-        int step = Helper.getRandomInRange(mMinCycleValue, mMaxCycleValue);
+    public void livePage() {
+        int step = Helper.getRandomInRange(1, 3);
         for (int i = 0; i < step; i++) {
-            handleDialog();
-
-            List<UiObject2> uiObjList = Helper.findObjects(By.res("com.jifen.qukan:id/a3b"));
-            for (UiObject2 uiObj : uiObjList) {
-                try {
-                    String tempStr = Helper.getText(uiObj.getParent(), By.res("com.jifen.qukan:id/a1a"));
-                    if (checkItemHasOperate(tempStr)) {
-                        continue;
-                    }
-                    if (Helper.clickRandom(uiObj, 0.8f)) {
-                        LogUtils.i("点击观看视频：" + tempStr);
-                        Helper.readVideoShort();
-                        LogUtils.i("观看视频完毕");
-                    }
-                } catch (Exception e) {
-                }
-            }
             Helper.slideVerticalUp();
+            if (Helper.click(0.3f, 0.5f)) {
+                Helper.readVideoShort();
+                handleDialog();
+                Helper.pressBack();
+            }
+
         }
     }
 

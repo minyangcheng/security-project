@@ -159,18 +159,13 @@ public class HuiTouTiao extends BaseAuto {
             int step = Helper.getRandomInRange(mMinCycleValue, mMaxCycleValue);
             for (int i = 0; i < step; i++) {
                 String tempStr = Helper.getText(By.res("com.cashtoutiao:id/tv_introduce"));
-                if (checkItemHasOperate(tempStr)) {
-                    Helper.slideVerticalUp();
-                } else {
-                    LogUtils.i("点击观看视频：" + tempStr);
-                    Helper.readVideoShort();
-                    LogUtils.i("观看视频完毕");
-                    Helper.slideVerticalUp();
-                }
+                LogUtils.i("点击观看视频：" + tempStr);
+                Helper.readVideoShort();
+                LogUtils.i("观看视频完毕");
+                Helper.slideVerticalUp();
             }
-
-            Helper.pressBack();
         }
-    }
 
+        Helper.pressBack();
+    }
 }

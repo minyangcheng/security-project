@@ -8,6 +8,7 @@ import com.blankj.utilcode.util.LogUtils;
 import com.blankj.utilcode.util.SPStaticUtils;
 import com.min.money.test.script.HuiTouTiao;
 import com.min.money.test.script.QuTouTiao;
+import com.min.money.test.script.ShuaBao;
 import com.min.money.test.script.WeiLiKanKan;
 import com.min.money.test.util.Helper;
 
@@ -34,6 +35,7 @@ public class AutoScript {
             BaseAuto.start(new QuTouTiao());
             BaseAuto.start(new WeiLiKanKan());
             BaseAuto.start(new HuiTouTiao());
+            BaseAuto.start(new ShuaBao());
             Helper.sleep(5000, 8000);
         }
     }

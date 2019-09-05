@@ -128,10 +128,10 @@ public class Helper {
         }
     }
 
-    public static boolean click(float x, float y) {
+    public static boolean click(float xPercent, float yPercent) {
         int width = mDevice.getDisplayWidth();
         int height = mDevice.getDisplayHeight();
-        boolean flag = mDevice.click((int) (width * x), (int) (height * y));
+        boolean flag = mDevice.click((int) (width * xPercent), (int) (height * yPercent));
         if (flag) {
             sleep(OPERATE_CLICK_MIN_WAIT_TIME, OPERATE_CLICK_MAX_WAIT_TIME);
             LogUtils.i("operate : click");
@@ -194,6 +194,18 @@ public class Helper {
         return destUiObj;
     }
 
+    public static UiObject2 findObject(BySelector selector,long timeoutMillion) {
+        return mDevice.wait(Until.findObject(selector), timeoutMillion);
+    }
+
+    public static UiObject2 findObjectInCertainTime(BySelector selector) {
+        return findObject(selector,8000);
+    }
+
+    public static boolean waitUiObjAppear(BySelector selector) {
+        return findObjectInCertainTime(selector) != null;
+    }
+
     public static boolean hasObject(BySelector selector) {
         long startTime = System.currentTimeMillis();
         boolean flag = mDevice.hasObject(selector);
@@ -249,14 +261,6 @@ public class Helper {
         } catch (Exception e) {
         }
         return "";
-    }
-
-    public static UiObject2 findObjectInCertainTime(BySelector selector) {
-        return mDevice.wait(Until.findObject(selector), 8000);
-    }
-
-    public static boolean waitUiObjAppear(BySelector selector) {
-        return findObjectInCertainTime(selector) != null;
     }
 
     public static boolean pressBack() {
