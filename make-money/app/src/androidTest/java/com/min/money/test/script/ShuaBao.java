@@ -10,18 +10,18 @@ import com.min.money.test.util.Helper;
 import java.util.ArrayList;
 import java.util.List;
 
-public class QuTouTiao extends BaseAuto {
+public class ShuaBao extends BaseAuto {
 
-    public QuTouTiao() {
-        super("com.jifen.qukan");
+    public ShuaBao() {
+        super("com.jm.video");
     }
 
     @Override
     public void operate() {
         for (int i = 0; i < mOperateTimes; i++) {
-            if (Helper.click(By.text("头条")) || Helper.waitUiObjAppear(By.text("推荐"))) {
-                LogUtils.i("进入头条页面");
-                newsPage();
+            if (Helper.click(By.text("首页"))) {
+                LogUtils.i("进入首页页面");
+                mainPage();
             }
             if (Helper.click(By.text("我的"))) {
                 LogUtils.i("进入我的页面");
@@ -35,8 +35,8 @@ public class QuTouTiao extends BaseAuto {
             }else {
                 Helper.pressBack();
             }
-            if (Helper.click(By.text("视频"))) {
-                LogUtils.i("进入视频页面");
+            if (Helper.click(By.text("关注"))) {
+                LogUtils.i("进入关注页面");
                 videoPage();
             }else {
                 Helper.pressBack();
@@ -65,46 +65,19 @@ public class QuTouTiao extends BaseAuto {
     protected void handleDialog() {
         long startTime = System.currentTimeMillis();
         List<Boolean> dataList = new ArrayList<>();
-        if (!Helper.hasObject(By.res("com.jifen.qukan:id/m8")) && !Helper.hasObject(By.res("com.jifen.qukan:id/hj"))) {
-            dataList.add(Helper.click(By.res("com.jifen.qukan:id/rb").text("以后更新")));
-            dataList.add(Helper.click(By.res("com.jifen.qukan:id/a4j").text("先去逛逛")));
-            dataList.add(Helper.click(By.res("com.jifen.qukan:id/p4")));
-            dataList.add(Helper.click(By.res("com.jifen.qukan:id/pl")));
-            dataList.add(Helper.click(By.res("com.jifen.qukan:id/og")));
-            dataList.add(Helper.click(By.res("com.jifen.qukan:id/nu")));
-            dataList.add(Helper.click(By.clickable(true).textContains("我知道")));
-        }
         Helper.recordLogHasDismissDialog(dataList, startTime);
     }
 
-    public void newsPage() {
+    public void mainPage() {
         int step = Helper.getRandomInRange(mMinCycleValue, mMaxCycleValue);
         for (int i = 0; i < step; i++) {
-            handleDialog();
 
-            List<UiObject2> uiObjList = Helper.findObjects(By.res("com.jifen.qukan:id/xx"));
-            for (UiObject2 uiObj : uiObjList) {
-                try {
-                    String tempStr = uiObj.getText();
-                    if (checkItemHasOperate(tempStr)) {
-                        continue;
-                    }
-                    if (Helper.clickRandom(uiObj, 0.8f)) {
-                        LogUtils.i("点击进入标题页面：" + tempStr);
-                        newsDetailPage();
-                        Helper.pressBack();
-                        LogUtils.i("点击返回键退出标题页面");
-                    }
-                } catch (Exception e) {
-                }
-            }
+            Helper.readVideoShort();
             Helper.slideVerticalUp();
-            Helper.clickRandom(By.res("com.jifen.qukan:id/sk").text("领取"), 0.5f);
         }
     }
 
     public void minePage() {
-        handleDialog();
         String[] textArr = {"我的金币", "提现兑换", "提现记录", "历史记录"};
         Helper.openPageRandom(textArr);
     }

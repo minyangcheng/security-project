@@ -1,7 +1,5 @@
 package com.min.money.test;
 
-import android.support.test.InstrumentationRegistry;
-import android.support.test.uiautomator.UiDevice;
 import android.text.TextUtils;
 
 import com.blankj.utilcode.util.ConvertUtils;
@@ -22,7 +20,6 @@ public abstract class BaseAuto {
     protected int mOperateTimes = 1;
 
     protected String mPackageName;
-    protected UiDevice mDevice;
 
     protected int mNowCoin;
     protected int mWorkCoin;
@@ -32,7 +29,6 @@ public abstract class BaseAuto {
     public BaseAuto(String packageName) {
         this.mPackageName = packageName;
         this.mTag = "app-" + mPackageName;
-        this.mDevice = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation());
     }
 
     public static void start(BaseAuto autoScript) {
@@ -55,8 +51,8 @@ public abstract class BaseAuto {
 
     private void doWork() {
         try {
-            Helper.wakeUpDevice(mDevice);
-            Helper.openAppSafe(mDevice, mPackageName);
+            Helper.wakeUpDevice();
+            Helper.openAppSafe(mPackageName);
             handleDialog();
             operate();
             mNowCoin = recordCoin(); // 获取当前coin值
@@ -69,11 +65,11 @@ public abstract class BaseAuto {
     }
 
     private void backAppToHome() {
-        mDevice.pressBack();
+        Helper.pressBack();
         Helper.sleep(200);
-        mDevice.pressBack();
+        Helper.pressBack();
         Helper.sleep(200);
-        mDevice.pressBack();
+        Helper.pressBack();
     }
 
     protected abstract void operate();

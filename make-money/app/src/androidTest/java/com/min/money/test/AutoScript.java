@@ -1,10 +1,14 @@
 package com.min.money.test;
 
+import android.support.test.InstrumentationRegistry;
 import android.support.test.runner.AndroidJUnit4;
+import android.support.test.uiautomator.UiDevice;
 
 import com.blankj.utilcode.util.LogUtils;
 import com.blankj.utilcode.util.SPStaticUtils;
 import com.min.money.test.script.HuiTouTiao;
+import com.min.money.test.script.QuTouTiao;
+import com.min.money.test.script.WeiLiKanKan;
 import com.min.money.test.util.Helper;
 
 import org.junit.After;
@@ -20,18 +24,18 @@ public class AutoScript {
         String startTimeStr = Helper.nowTimeStr();
         SPStaticUtils.put("start_time", startTimeStr);
         SPStaticUtils.put("end_time", "");
-
         LogUtils.i("application start time:" + startTimeStr);
+        init();
     }
 
     @Test
     public void startAutoScript() {
-//        while (true) {
-//            BaseAuto.start(new QuTouTiao());
-//            BaseAuto.start(new WeiLiKanKan());
-//            Helper.sleep(5000, 8000);
-//        }
-        BaseAuto.start(new HuiTouTiao());
+        while (true) {
+            BaseAuto.start(new QuTouTiao());
+            BaseAuto.start(new WeiLiKanKan());
+            BaseAuto.start(new HuiTouTiao());
+            Helper.sleep(5000, 8000);
+        }
     }
 
     @After
@@ -40,6 +44,11 @@ public class AutoScript {
         SPStaticUtils.put("end_time", finishTimeStr);
 
         LogUtils.i("application finish time:" + finishTimeStr);
+    }
+
+    private void init() {
+        UiDevice uiDevice = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation());
+        Helper.setUiDevice(uiDevice);
     }
 
 }
