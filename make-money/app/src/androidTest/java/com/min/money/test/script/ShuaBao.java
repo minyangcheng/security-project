@@ -70,7 +70,7 @@ public class ShuaBao extends BaseAuto {
     }
 
     public void mainPage() {
-        int step = Helper.getRandomInRange(1, 3);
+        int step = Helper.getRandomInRange(mMinCycleValue, mMaxCycleValue);
         for (int i = 0; i < step; i++) {
             String tempStr = Helper.getText(By.res("com.jm.video:id/desc"));
             LogUtils.i("点击观看视频：" + tempStr);
