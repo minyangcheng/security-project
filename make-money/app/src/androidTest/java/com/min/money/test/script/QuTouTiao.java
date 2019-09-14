@@ -26,19 +26,19 @@ public class QuTouTiao extends BaseAuto {
             if (Helper.click(By.text("我的"))) {
                 LogUtils.i("进入我的页面");
                 minePage();
-            }else {
+            } else {
                 Helper.pressBack();
             }
             if (Helper.click(By.text("任务"))) {
                 LogUtils.i("进入任务页面");
                 taskPage();
-            }else {
+            } else {
                 Helper.pressBack();
             }
             if (Helper.click(By.text("视频"))) {
                 LogUtils.i("进入视频页面");
                 videoPage();
-            }else {
+            } else {
                 Helper.pressBack();
             }
         }
@@ -65,15 +65,14 @@ public class QuTouTiao extends BaseAuto {
     protected void handleDialog() {
         long startTime = System.currentTimeMillis();
         List<Boolean> dataList = new ArrayList<>();
-        if (!Helper.hasObject(By.res("com.jifen.qukan:id/m8")) && !Helper.hasObject(By.res("com.jifen.qukan:id/hj"))) {
-            dataList.add(Helper.click(By.res("com.jifen.qukan:id/rb").text("以后更新")));
-            dataList.add(Helper.click(By.res("com.jifen.qukan:id/a4j").text("先去逛逛")));
-            dataList.add(Helper.click(By.res("com.jifen.qukan:id/p4")));
-            dataList.add(Helper.click(By.res("com.jifen.qukan:id/pl")));
-            dataList.add(Helper.click(By.res("com.jifen.qukan:id/og")));
-            dataList.add(Helper.click(By.res("com.jifen.qukan:id/nu")));
-            dataList.add(Helper.click(By.clickable(true).textContains("我知道")));
-        }
+        dataList.add(Helper.click(By.res("com.jifen.qukan:id/rb").text("以后更新")));
+        dataList.add(Helper.click(By.res("com.jifen.qukan:id/a4j").text("先去逛逛")));
+        dataList.add(Helper.click(By.res("com.jifen.qukan:id/p4")));
+        dataList.add(Helper.click(By.res("com.jifen.qukan:id/pl")));
+        dataList.add(Helper.click(By.res("com.jifen.qukan:id/og")));
+        dataList.add(Helper.click(By.res("com.jifen.qukan:id/nu")));
+        dataList.add(Helper.click(By.clickable(true).textContains("我知道")));
+
         Helper.recordLogHasDismissDialog(dataList, startTime);
     }
 

@@ -10,6 +10,7 @@ import com.min.money.test.script.HuiTouTiao;
 import com.min.money.test.script.QuTouTiao;
 import com.min.money.test.script.ShuaBao;
 import com.min.money.test.script.WeiLiKanKan;
+import com.min.money.test.script.XiangKan;
 import com.min.money.test.util.Helper;
 
 import org.junit.After;
@@ -32,6 +33,7 @@ public class AutoScript {
     @Test
     public void startAutoScript() {
         while (true) {
+            BaseAuto.start(new XiangKan());
             BaseAuto.start(new QuTouTiao());
             BaseAuto.start(new WeiLiKanKan());
             BaseAuto.start(new HuiTouTiao());

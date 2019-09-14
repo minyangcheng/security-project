@@ -61,11 +61,20 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @OnClick(R.id.btn_install_shuabao)
-    void installDongFangTouTiao() {
+    void installShuabao() {
         ToastUtils.showShort("准备安装中....");
         File destFile = new File(this.getExternalCacheDir(), "shuabao.apk");
         FileUtil.copyAssetsFileToStorage(this, "shuabao.apk", destFile.getAbsolutePath());
         LogUtils.d("copy shuabao apk success :" + destFile.getAbsolutePath());
+        AppUtils.installApp(destFile.getAbsolutePath());
+    }
+
+    @OnClick(R.id.btn_install_xiangkan)
+    void installXiangkan() {
+        ToastUtils.showShort("准备安装中....");
+        File destFile = new File(this.getExternalCacheDir(), "xiangkan.apk");
+        FileUtil.copyAssetsFileToStorage(this, "xiangkan.apk", destFile.getAbsolutePath());
+        LogUtils.d("copy xiangkan apk success :" + destFile.getAbsolutePath());
         AppUtils.installApp(destFile.getAbsolutePath());
     }
 
