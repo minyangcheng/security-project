@@ -66,10 +66,9 @@ public abstract class BaseAuto {
 
     private void backAppToHome() {
         Helper.pressBack();
-        Helper.sleep(200);
         Helper.pressBack();
-        Helper.sleep(200);
         Helper.pressBack();
+        Helper.closeApp(mPackageName);
     }
 
     protected abstract void operate();

@@ -4,6 +4,7 @@ import android.support.test.uiautomator.By;
 import android.support.test.uiautomator.UiObject2;
 
 import com.blankj.utilcode.util.LogUtils;
+import com.blankj.utilcode.util.ScreenUtils;
 import com.min.money.test.BaseAuto;
 import com.min.money.test.util.Helper;
 
@@ -104,8 +105,8 @@ public class WeiLiKanKan extends BaseAuto {
     public void minePage() {
         handleDialog();
 
-        if (Helper.click(By.textContains("立即签到"))) {
-            Helper.click(By.clazz("android.widget.Button").text("立即签到"));
+        if (Helper.click(By.res("cn.weli.story:id/ll_not_sign"))) {
+            Helper.click(490f/ ScreenUtils.getScreenWidth(),570f/ScreenUtils.getScreenHeight());
             Helper.pressBack();
         }
         String[] textArr = {"我的金币", "累计零钱", "零钱余额", "短信邀请"};

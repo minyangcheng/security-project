@@ -35,12 +35,6 @@ public class HuiTouTiao extends BaseAuto {
             } else {
                 Helper.pressBack();
             }
-            if (Helper.click(By.text("视频"))) {
-                LogUtils.i("进入视频页面");
-                videoPage();
-            } else {
-                Helper.pressBack();
-            }
             if (Helper.click(By.text("小视频"))) {
                 LogUtils.i("进入小视频页面");
                 smallVideoPage();
@@ -79,33 +73,32 @@ public class HuiTouTiao extends BaseAuto {
             dataList.add(Helper.click(By.res("com.cashtoutiao:id/tv_left").text("忽略")));
             dataList.add(Helper.click(By.res("com.cashtoutiao:id/tv_know").text("我知道了")));
             dataList.add(Helper.click(By.res("com.cashtoutiao:id/iv_btn_cancel")));
+            dataList.add(Helper.click(By.res("com.cashtoutiao:id/close_update_btn")));
         }
         Helper.recordLogHasDismissDialog(dataList, startTime);
     }
 
     public void newsPage() {
-        int step = Helper.getRandomInRange(4, 8);
-        for (int i = 0; i < step; i++) {
+        handleDialog();
+        if (Helper.click(By.res("com.cashtoutiao:id/count_down_tv").text("点击领取"))) {
             handleDialog();
-
-            List<UiObject2> uiObjList = Helper.findObjects(By.res("com.cashtoutiao:id/tv_timeline"));
-            for (UiObject2 uiObj : uiObjList) {
-                try {
-                    String tempStr = Helper.getText(Helper.findObjectInParent(uiObj, By.res("com.cashtoutiao:id/tv_title"), 2));
-                    if (checkItemHasOperate(tempStr)) {
-                        continue;
-                    }
-                    if (Helper.clickRandom(uiObj, 1f)) {
-                        LogUtils.i("点击进入标题页面：" + tempStr);
-                        newsDetailPage();
-                        Helper.pressBack();
-                        LogUtils.i("点击返回键退出标题页面");
-                    }
-                } catch (Exception e) {
+        }
+        Helper.slideVerticalUp();
+        List<UiObject2> uiObjList = Helper.findObjects(By.res("com.cashtoutiao:id/tv_timeline"));
+        for (UiObject2 uiObj : uiObjList) {
+            try {
+                String tempStr = Helper.getText(Helper.findObjectInParent(uiObj, By.res("com.cashtoutiao:id/tv_title"), 2));
+                if (checkItemHasOperate(tempStr)) {
+                    continue;
                 }
+                if (Helper.clickRandom(uiObj, 1f)) {
+                    LogUtils.i("点击进入标题页面：" + tempStr);
+                    newsDetailPage();
+                    Helper.pressBack();
+                    LogUtils.i("点击返回键退出标题页面");
+                }
+            } catch (Exception e) {
             }
-            Helper.slideVerticalUp();
-            Helper.clickRandom(By.res("com.cashtoutiao:id/count_down_tv").text("点击领取"), 0.5f);
         }
     }
 
@@ -129,43 +122,47 @@ public class HuiTouTiao extends BaseAuto {
     }
 
     public void videoPage() {
-        int step = Helper.getRandomInRange(4, 8);
-        for (int i = 0; i < step; i++) {
-            handleDialog();
-
-            List<UiObject2> uiObjList = Helper.findObjects(By.res("com.cashtoutiao:id/tv_list_video_duration"));
-            for (UiObject2 uiObj : uiObjList) {
-                try {
-                    String tempStr = Helper.getText(Helper.findObjectInParent(uiObj, By.res("com.cashtoutiao:id/title"), 1));
-                    if (checkItemHasOperate(tempStr)) {
-                        continue;
-                    }
-                    if (Helper.clickRandom(uiObj, 1f)) {
-                        LogUtils.i("点击观看视频：" + tempStr);
-                        Helper.readVideoShort();
-                        Helper.pressBack();
-                        LogUtils.i("观看视频完毕");
-                    }
-                } catch (Exception e) {
+        handleDialog();
+        Helper.slideVerticalUp();
+        List<UiObject2> uiObjList = Helper.findObjects(By.res("com.cashtoutiao:id/tv_list_video_duration"));
+        for (UiObject2 uiObj : uiObjList) {
+            try {
+                String tempStr = Helper.getText(Helper.findObjectInParent(uiObj, By.res("com.cashtoutiao:id/title"), 1));
+                if (checkItemHasOperate(tempStr)) {
+                    continue;
                 }
+                if (Helper.clickRandom(uiObj, 1f)) {
+                    LogUtils.i("点击观看视频：" + tempStr);
+                    Helper.readVideoShort();
+                    Helper.pressBack();
+                    LogUtils.i("观看视频完毕");
+                }
+            } catch (Exception e) {
             }
-            Helper.slideVerticalUp();
         }
     }
 
     public void smallVideoPage() {
         handleDialog();
         if (Helper.click(By.res("com.cashtoutiao:id/rl_bg").hasDescendant(By.res("com.cashtoutiao:id/iv_like")))) {
-            int step = Helper.getRandomInRange(mMinCycleValue, mMaxCycleValue);
+            int step = Helper.getRandomInRange(mMinCycleValue + 20, mMaxCycleValue + 20);
             for (int i = 0; i < step; i++) {
-                String tempStr = Helper.getText(By.res("com.cashtoutiao:id/tv_introduce"));
-                LogUtils.i("点击观看视频：" + tempStr);
-                Helper.readVideoShort();
-                LogUtils.i("观看视频完毕");
-                Helper.slideVerticalUp();
+                try {
+                    if (!Helper.hasObject(By.textContains("下载"))) {
+                        String tempStr = Helper.getText(By.res("com.cashtoutiao:id/tv_introduce"));
+                        LogUtils.i("点击观看视频：" + tempStr);
+                        Helper.readVideoLittle();
+                        if (Helper.clickRandom(By.res("com.cashtoutiao:id/ll_like"), 0.4f)) {
+                            LogUtils.i("点赞...");
+                        }
+                        LogUtils.i("观看视频完毕");
+
+                    }
+                    Helper.slideVerticalUp();
+                } catch (Exception e) {
+                }
             }
         }
-
         Helper.pressBack();
     }
 }

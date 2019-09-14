@@ -4,6 +4,7 @@ import android.support.test.uiautomator.By;
 import android.support.test.uiautomator.UiObject2;
 
 import com.blankj.utilcode.util.LogUtils;
+import com.blankj.utilcode.util.ScreenUtils;
 import com.min.money.test.BaseAuto;
 import com.min.money.test.util.Helper;
 
@@ -70,16 +71,21 @@ public class ShuaBao extends BaseAuto {
     }
 
     public void mainPage() {
-        int step = Helper.getRandomInRange(mMinCycleValue, mMaxCycleValue);
+        int step = Helper.getRandomInRange(mMinCycleValue + 20, mMaxCycleValue + 20);
         for (int i = 0; i < step; i++) {
-            String tempStr = Helper.getText(By.res("com.jm.video:id/desc"));
-            LogUtils.i("点击观看视频：" + tempStr);
-            Helper.readVideoShort();
-            if (Helper.clickRandom(By.res("com.jm.video:id/praise"), 0.4f)) {
-                LogUtils.i("点赞...");
+            try {
+                if (!Helper.hasObject(By.textContains("下载"))) {
+                    String tempStr = Helper.getText(By.res("com.jm.video:id/desc"));
+                    LogUtils.i("点击观看视频：" + tempStr);
+                    Helper.readVideoLittle();
+                    if (Helper.clickRandom(By.res("com.jm.video:id/praise"), 0.4f)) {
+                        LogUtils.i("点赞...");
+                    }
+                    LogUtils.i("观看视频完毕");
+                }
+                Helper.slideVerticalUp();
+            } catch (Exception e) {
             }
-            LogUtils.i("观看视频完毕");
-            Helper.slideVerticalUp();
         }
     }
 
@@ -90,29 +96,29 @@ public class ShuaBao extends BaseAuto {
 
     public void taskPage() {
         handleDialog();
-        if (Helper.click(By.text("立即签到"))) {
-            if (Helper.click(By.text("看视频签到"))) {
-                Helper.readVideoShort();
+        Helper.click(850f / ScreenUtils.getScreenWidth(), 490f / ScreenUtils.getScreenHeight());
+        if (Helper.hasObject(By.res("com.jm.video:id/title_bar"))) {
+            Helper.pressBack();
+        } else {
+            Helper.click(575f / ScreenUtils.getScreenWidth(), 1275f / ScreenUtils.getScreenHeight());
+            if (!Helper.hasObject(By.res("com.jm.video:id/tabLayout"))) {
                 UiObject2 tempObj = null;
-                while ((tempObj = Helper.findObject(By.res("com.jm.video:id/tt_video_ad_close"), 20 * 1000)) == null) {
+                while ((tempObj = Helper.findObject(By.res("com.jm.video:id/tt_video_ad_close"), 10 * 1000)) == null) {
                     Helper.readVideoShort();
                 }
                 tempObj.click();
                 handleDialog();
             }
         }
+
     }
 
     public void livePage() {
-        int step = Helper.getRandomInRange(1, 3);
-        for (int i = 0; i < step; i++) {
-            Helper.slideVerticalUp();
-            if (Helper.click(0.3f, 0.5f)) {
-                Helper.readVideoShort();
-                handleDialog();
-                Helper.pressBack();
-            }
-
+        Helper.slideVerticalUp();
+        if (Helper.click(0.3f, 0.5f)) {
+            Helper.readVideoShort();
+            handleDialog();
+            Helper.pressBack();
         }
     }
 

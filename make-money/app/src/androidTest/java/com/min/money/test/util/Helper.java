@@ -54,12 +54,12 @@ public class Helper {
     }
 
     public static void brightScreen() {
-        try{
-            if(mDevice.isScreenOn()){
+        try {
+            if (mDevice.isScreenOn()) {
                 mDevice.wakeUp();
                 sleep(1000);
             }
-        }catch (Exception e){
+        } catch (Exception e) {
         }
         Context context = InstrumentationRegistry.getInstrumentation().getContext();
         PowerManager pm = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
@@ -96,7 +96,7 @@ public class Helper {
      */
     public static void sleep(int million) {
         try {
-            int temp = million + (int) (Math.random() * 1000);
+            int temp = million + (int) (Math.random() * 100);
             Thread.sleep(temp);
         } catch (Exception e) {
             e.printStackTrace();
@@ -194,12 +194,12 @@ public class Helper {
         return destUiObj;
     }
 
-    public static UiObject2 findObject(BySelector selector,long timeoutMillion) {
+    public static UiObject2 findObject(BySelector selector, long timeoutMillion) {
         return mDevice.wait(Until.findObject(selector), timeoutMillion);
     }
 
     public static UiObject2 findObjectInCertainTime(BySelector selector) {
-        return findObject(selector,8000);
+        return findObject(selector, 8000);
     }
 
     public static boolean waitUiObjAppear(BySelector selector) {
@@ -264,7 +264,9 @@ public class Helper {
     }
 
     public static boolean pressBack() {
-        return mDevice.pressBack();
+        boolean flag = mDevice.pressBack();
+        sleep(15);
+        return flag;
     }
 
     public static int getRandomInRange(int min, int max) {
@@ -312,7 +314,7 @@ public class Helper {
 
     public static void openPageRandom(String[] pageTexts) {
         Random random = new Random();
-        int times = random.nextInt(4);
+        int times = random.nextInt(2);
         for (int i = 0; i < times; i++) {
             int temp = random.nextInt(pageTexts.length);
             if (click(By.text(pageTexts[temp]))) {
@@ -325,16 +327,24 @@ public class Helper {
         }
     }
 
+    public static void readTextLittle() {
+        Helper.sleep(500, 1500);
+    }
+
     public static void readTextShort() {
         Helper.sleep(1000, 2000);
     }
 
     public static void readTextLong() {
-        Helper.sleep(2000, 3000);
+        Helper.sleep(1500, 2000);
+    }
+
+    public static void readVideoLittle() {
+        Helper.sleep(4000, 12000);
     }
 
     public static void readVideoShort() {
-        Helper.sleep(20000, 30000);
+        Helper.sleep(8000, 20000);
     }
 
     public static void readVideoLong() {
