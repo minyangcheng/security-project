@@ -78,6 +78,15 @@ public class MainActivity extends AppCompatActivity {
         AppUtils.installApp(destFile.getAbsolutePath());
     }
 
+    @OnClick(R.id.btn_install_dongfangtoutiao)
+    void installDongFangTouTiao() {
+        ToastUtils.showShort("准备安装中....");
+        File destFile = new File(this.getExternalCacheDir(), "dongfangtoutiao.apk");
+        FileUtil.copyAssetsFileToStorage(this, "dongfangtoutiao.apk", destFile.getAbsolutePath());
+        LogUtils.d("copy xiangkan apk success :" + destFile.getAbsolutePath());
+        AppUtils.installApp(destFile.getAbsolutePath());
+    }
+
     @OnClick(R.id.btn_install_auto)
     void installAuto() {
         ToastUtils.showShort("准备安装中....");

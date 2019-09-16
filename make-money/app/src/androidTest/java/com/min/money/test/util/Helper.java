@@ -341,7 +341,7 @@ public class Helper {
     }
 
     public static void readVideoLittle() {
-        Helper.sleep(4000, 12000);
+        Helper.sleep(6000, 18000);
     }
 
     public static void readVideoShort() {

@@ -51,6 +51,13 @@
             android:text="安装想看" />
 
         <Button
+            android:id="@+id/btn_install_dongfangtoutiao"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:text="安装东方头条" />
+
+        <Button
             android:id="@+id/btn_install_auto"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

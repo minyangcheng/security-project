@@ -145,14 +145,14 @@ public class HuiTouTiao extends BaseAuto {
     public void smallVideoPage() {
         handleDialog();
         if (Helper.click(By.res("com.cashtoutiao:id/rl_bg").hasDescendant(By.res("com.cashtoutiao:id/iv_like")))) {
-            int step = Helper.getRandomInRange(mMinCycleValue + 20, mMaxCycleValue + 20);
+            int step = Helper.getRandomInRange(mMinCycleValue + 50, mMaxCycleValue + 50);
             for (int i = 0; i < step; i++) {
                 try {
-                    if (!Helper.hasObject(By.textContains("下载"))) {
+                    if (!Helper.hasObject(By.textContains("下载")) && !Helper.hasObject(By.textContains("详情"))) {
                         String tempStr = Helper.getText(By.res("com.cashtoutiao:id/tv_introduce"));
                         LogUtils.i("点击观看视频：" + tempStr);
                         Helper.readVideoLittle();
-                        if (Helper.clickRandom(By.res("com.cashtoutiao:id/ll_like"), 0.4f)) {
+                        if (Helper.clickRandom(By.res("com.cashtoutiao:id/ll_like"), 0.1f)) {
                             LogUtils.i("点赞...");
                         }
                         LogUtils.i("观看视频完毕");

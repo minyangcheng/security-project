@@ -71,14 +71,14 @@ public class ShuaBao extends BaseAuto {
     }
 
     public void mainPage() {
-        int step = Helper.getRandomInRange(mMinCycleValue + 20, mMaxCycleValue + 20);
+        int step = Helper.getRandomInRange(mMinCycleValue + 50, mMaxCycleValue + 50);
         for (int i = 0; i < step; i++) {
             try {
-                if (!Helper.hasObject(By.textContains("下载"))) {
+                if (!Helper.hasObject(By.textContains("下载")) && !Helper.hasObject(By.textContains("详情"))) {
                     String tempStr = Helper.getText(By.res("com.jm.video:id/desc"));
                     LogUtils.i("点击观看视频：" + tempStr);
                     Helper.readVideoLittle();
-                    if (Helper.clickRandom(By.res("com.jm.video:id/praise"), 0.4f)) {
+                    if (Helper.clickRandom(By.res("com.jm.video:id/praise"), 0.1f)) {
                         LogUtils.i("点赞...");
                     }
                     LogUtils.i("观看视频完毕");
