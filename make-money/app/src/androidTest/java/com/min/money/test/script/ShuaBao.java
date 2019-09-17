@@ -23,6 +23,8 @@ public class ShuaBao extends BaseAuto {
             if (Helper.click(By.text("首页"))) {
                 LogUtils.i("进入首页页面");
                 mainPage();
+            }else {
+                Helper.pressBack();
             }
             if (Helper.click(By.text("我"))) {
                 LogUtils.i("进入我页面");

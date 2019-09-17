@@ -23,6 +23,8 @@ public class XiangKan extends BaseAuto {
             if (Helper.click(By.text("首页"))) {
                 LogUtils.i("进入首页页面");
                 newsPage();
+            }else {
+                Helper.pressBack();
             }
             if (Helper.click(By.text("我的"))) {
                 LogUtils.i("进入我的页面");

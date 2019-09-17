@@ -6,6 +6,7 @@ import android.support.test.uiautomator.UiDevice;
 
 import com.blankj.utilcode.util.LogUtils;
 import com.blankj.utilcode.util.SPStaticUtils;
+import com.min.money.test.script.DongFangTouTiao;
 import com.min.money.test.script.HuiTouTiao;
 import com.min.money.test.script.QuTouTiao;
 import com.min.money.test.script.ShuaBao;
@@ -33,6 +34,7 @@ public class AutoScript {
     @Test
     public void startAutoScript() {
         while (true) {
+            BaseAuto.start(new DongFangTouTiao());
             BaseAuto.start(new XiangKan());
             BaseAuto.start(new QuTouTiao());
             BaseAuto.start(new WeiLiKanKan());

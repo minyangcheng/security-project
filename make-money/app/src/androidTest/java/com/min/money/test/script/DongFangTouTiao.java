@@ -22,26 +22,26 @@ public class DongFangTouTiao extends BaseAuto {
             if (Helper.click(By.text("新闻")) || Helper.waitUiObjAppear(By.text("推荐"))) {
                 LogUtils.i("进入头条页面");
                 newsPage();
+            } else {
+                Helper.pressBack();
             }
-
             if (Helper.click(By.text("我的"))) {
                 LogUtils.i("进入我的页面");
                 minePage();
+            } else {
+                Helper.pressBack();
             }
-
             if (Helper.click(By.text("任务"))) {
                 LogUtils.i("进入任务页面");
                 taskPage();
+            } else {
+                Helper.pressBack();
             }
-
-            if (Helper.click(By.text("游戏"))) {
-                LogUtils.i("进入游戏页面");
-                gamePage();
-            }
-
             if (Helper.click(By.text("视频"))) {
                 LogUtils.i("进入视频页面");
                 videoPage();
+            } else {
+                Helper.pressBack();
             }
         }
     }
@@ -71,16 +71,16 @@ public class DongFangTouTiao extends BaseAuto {
             dataList.add(Helper.click(By.res("com.songheng.eastnews:id/vf")));
             dataList.add(Helper.click(By.res("com.songheng.eastnews:id/ua")));
             dataList.add(Helper.click(By.res("com.songheng.eastnews:id/e4")));
-            Helper.brightScreen();
             dataList.add(Helper.click(By.res("com.songheng.eastnews:id/fq")));
             dataList.add(Helper.click(By.res("com.songheng.eastnews:id/pu")));
+            dataList.add(Helper.click(By.res("com.songheng.eastnews:id/aw9")));
         }
         Helper.recordLogHasDismissDialog(dataList, startTime);
         Helper.brightScreen();
     }
 
     public void newsPage() {
-        int step = Helper.getRandomInRange(mMinCycleValue, mMaxCycleValue);
+        int step = Helper.getRandomInRange(2, 5);
         for (int i = 0; i < step; i++) {
             handleDialog();
 
@@ -88,7 +88,7 @@ public class DongFangTouTiao extends BaseAuto {
             for (UiObject2 uiObj : uiObjList) {
                 try {
                     String tempStr = Helper.getText(Helper.findObjectInParent(uiObj, By.res("com.songheng.eastnews:id/auu"), 2));
-                    if (checkItemHasOperate(tempStr) || tempStr.contains("六张海报")) {
+                    if (checkItemHasOperate(tempStr) || tempStr.contains("习")) {
                         continue;
                     }
                     if (Helper.clickRandom(uiObj, 0.8f)) {
@@ -102,6 +102,9 @@ public class DongFangTouTiao extends BaseAuto {
                 }
             }
             Helper.slideVerticalUp();
+            if (Helper.click(By.text("拆红包"))) {
+                handleDialog();
+            }
             Helper.clickRandom(By.res("com.songheng.eastnews:id/ajr").text("领取"), 0.5f);
         }
     }
@@ -119,17 +122,13 @@ public class DongFangTouTiao extends BaseAuto {
 
     public void minePage() {
         handleDialog();
-        String[] textArr = {"立即体现", "我的钱包", "邀请好友", "我的消息", "游戏中心"};
+        String[] textArr = {"立即提现", "我的钱包", "我的消息"};
         Helper.openPageRandom(textArr);
     }
 
-    public void gamePage() {
-        handleDialog();
-        Helper.readTextShort();
-    }
 
     public void videoPage() {
-        int step = Helper.getRandomInRange(mMinCycleValue, mMaxCycleValue);
+        int step = Helper.getRandomInRange(mMinCycleValue + 20, mMaxCycleValue + 20);
         for (int i = 0; i < step; i++) {
             handleDialog();
 

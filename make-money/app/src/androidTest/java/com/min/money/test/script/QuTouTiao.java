@@ -22,6 +22,8 @@ public class QuTouTiao extends BaseAuto {
             if (Helper.click(By.text("头条")) || Helper.waitUiObjAppear(By.text("推荐"))) {
                 LogUtils.i("进入头条页面");
                 newsPage();
+            }else {
+                Helper.pressBack();
             }
             if (Helper.click(By.text("我的"))) {
                 LogUtils.i("进入我的页面");
