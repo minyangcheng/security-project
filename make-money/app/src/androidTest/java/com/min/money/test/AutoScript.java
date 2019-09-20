@@ -9,6 +9,7 @@ import com.blankj.utilcode.util.SPStaticUtils;
 import com.min.money.test.script.DongFangTouTiao;
 import com.min.money.test.script.HuiTouTiao;
 import com.min.money.test.script.JuKanDian;
+import com.min.money.test.script.MaYiTouTiao;
 import com.min.money.test.script.QuTouTiao;
 import com.min.money.test.script.ShuaBao;
 import com.min.money.test.script.WeiLiKanKan;
@@ -34,16 +35,17 @@ public class AutoScript {
 
     @Test
     public void startAutoScript() {
-//        while (true) {
+        while (true) {
+            BaseAuto.start(new MaYiTouTiao());
             BaseAuto.start(new JuKanDian());
-//            BaseAuto.start(new XiangKan());
-//            BaseAuto.start(new QuTouTiao());
-//            BaseAuto.start(new WeiLiKanKan());
-//            BaseAuto.start(new ShuaBao());
-//            BaseAuto.start(new DongFangTouTiao());
-//            BaseAuto.start(new HuiTouTiao());
-//            Helper.sleep(5000, 8000);
-//        }
+            BaseAuto.start(new XiangKan());
+            BaseAuto.start(new QuTouTiao());
+            BaseAuto.start(new WeiLiKanKan());
+            BaseAuto.start(new ShuaBao());
+            BaseAuto.start(new DongFangTouTiao());
+            BaseAuto.start(new HuiTouTiao());
+            Helper.sleep(5000, 8000);
+        }
     }
 
     @After

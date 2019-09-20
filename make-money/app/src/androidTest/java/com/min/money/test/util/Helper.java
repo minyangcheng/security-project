@@ -328,10 +328,10 @@ public class Helper {
                 readTextShort();
                 mDevice.pressBack();
                 LogUtils.i("点击返回键退出页面");
-
-                slideVertical(0.3f, 0.2f);
             }
         }
+        slideVertical(0.6f, 0.3f);
+        slideVertical(0.3f, 0.6f);
     }
 
     public static void readTextLittle() {
