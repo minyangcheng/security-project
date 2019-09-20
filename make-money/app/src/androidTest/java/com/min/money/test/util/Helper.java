@@ -8,8 +8,8 @@ import android.support.test.uiautomator.By;
 import android.support.test.uiautomator.BySelector;
 import android.support.test.uiautomator.UiDevice;
 import android.support.test.uiautomator.UiObject2;
+import android.support.test.uiautomator.UiWatcher;
 import android.support.test.uiautomator.Until;
-import android.widget.TextView;
 
 import com.blankj.utilcode.util.LogUtils;
 import com.min.money.helper.RootCmd;
@@ -36,6 +36,10 @@ public class Helper {
 
     public static void setUiDevice(UiDevice device) {
         mDevice = device;
+    }
+
+    public static UiDevice getUiDevice(){
+        return mDevice;
     }
 
     /**
@@ -303,11 +307,13 @@ public class Helper {
     }
 
     public static void readPage() {
-        int times = getRandomInRange(3, 5);
+        int times = getRandomInRange(4, 6);
+        slideVertical(0.6f, 0.4f);
         for (int i = 0; i < times; i++) {
             slideVertical(0.6f, 0.2f);
-            click(By.text("展开查看全文").clazz(TextView.class));
-            click(By.text("点击阅读全文").clazz(TextView.class));
+            click(By.text("展开查看全文"));
+            click(By.text("点击阅读全文"));
+            click(By.text("查看全文，奖励更多"));
             readTextLong();
         }
     }
@@ -337,7 +343,7 @@ public class Helper {
     }
 
     public static void readTextLong() {
-        Helper.sleep(1500, 2000);
+        Helper.sleep(1500, 3000);
     }
 
     public static void readVideoLittle() {

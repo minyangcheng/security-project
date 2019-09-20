@@ -22,7 +22,7 @@ public class QuTouTiao extends BaseAuto {
             if (Helper.click(By.text("头条")) || Helper.waitUiObjAppear(By.text("推荐"))) {
                 LogUtils.i("进入头条页面");
                 newsPage();
-            }else {
+            } else {
                 Helper.pressBack();
             }
             if (Helper.click(By.text("我的"))) {
@@ -91,16 +91,18 @@ public class QuTouTiao extends BaseAuto {
                         continue;
                     }
                     if (Helper.clickRandom(uiObj, 0.8f)) {
-                        LogUtils.i("点击进入标题页面：" + tempStr);
-                        newsDetailPage();
-                        Helper.pressBack();
-                        LogUtils.i("点击返回键退出标题页面");
+                        if (!Helper.click(By.res("com.jifen.qukan:id/f_").text("关闭"))) {
+                            LogUtils.i("点击进入标题页面：" + tempStr);
+                            newsDetailPage();
+                            Helper.pressBack();
+                            LogUtils.i("点击返回键退出标题页面");
+                        }
                     }
                 } catch (Exception e) {
                 }
             }
             Helper.slideVerticalUp();
-            Helper.clickRandom(By.res("com.jifen.qukan:id/sk").text("领取"), 0.5f);
+            Helper.click(By.res("com.jifen.qukan:id/sk").text("领取"));
         }
     }
 

@@ -80,32 +80,30 @@ public class DongFangTouTiao extends BaseAuto {
     }
 
     public void newsPage() {
-        int step = Helper.getRandomInRange(2, 5);
-        for (int i = 0; i < step; i++) {
+        handleDialog();
+        if (Helper.click(By.res("com.songheng.eastnews:id/ajr").text("领取"))) {
             handleDialog();
-
-            List<UiObject2> uiObjList = Helper.findObjects(By.res("com.songheng.eastnews:id/asg"));
-            for (UiObject2 uiObj : uiObjList) {
-                try {
-                    String tempStr = Helper.getText(Helper.findObjectInParent(uiObj, By.res("com.songheng.eastnews:id/auu"), 2));
-                    if (checkItemHasOperate(tempStr) || tempStr.contains("习")) {
-                        continue;
-                    }
-                    if (Helper.clickRandom(uiObj, 0.8f)) {
-                        LogUtils.i("点击进入标题页面：" + tempStr);
-                        newsDetailPage();
-                        Helper.pressBack();
-                        LogUtils.i("点击返回键退出标题页面");
-                    }
-
-                } catch (Exception e) {
+        }
+        if (Helper.click(By.text("拆红包"))) {
+            handleDialog();
+        }
+        Helper.slideVerticalUp();
+        List<UiObject2> uiObjList = Helper.findObjects(By.res("com.songheng.eastnews:id/asg"));
+        for (UiObject2 uiObj : uiObjList) {
+            try {
+                String tempStr = Helper.getText(Helper.findObjectInParent(uiObj, By.res("com.songheng.eastnews:id/auu"), 2));
+                if (checkItemHasOperate(tempStr)) {
+                    continue;
                 }
+                if (Helper.click(uiObj)) {
+                    LogUtils.i("点击进入标题页面：" + tempStr);
+                    newsDetailPage();
+                    Helper.pressBack();
+                    LogUtils.i("点击返回键退出标题页面");
+                }
+
+            } catch (Exception e) {
             }
-            Helper.slideVerticalUp();
-            if (Helper.click(By.text("拆红包"))) {
-                handleDialog();
-            }
-            Helper.clickRandom(By.res("com.songheng.eastnews:id/ajr").text("领取"), 0.5f);
         }
     }
 
