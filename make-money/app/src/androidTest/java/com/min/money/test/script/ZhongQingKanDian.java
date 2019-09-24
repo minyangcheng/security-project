@@ -73,7 +73,7 @@ public class ZhongQingKanDian extends BaseAuto {
     }
 
     public void newsPage() {
-        int step = Helper.getRandomInRange(10, 20);
+        int step = Helper.getRandomInRange(mMinCycleValue, mMaxCycleValue);
         for (int i = 0; i < step; i++) {
             handleDialog();
 
@@ -114,7 +114,7 @@ public class ZhongQingKanDian extends BaseAuto {
     }
 
     public void videoPage() {
-        int step = Helper.getRandomInRange(10, 20);
+        int step = Helper.getRandomInRange(mMinCycleValue, mMaxCycleValue);
         for (int i = 0; i < step; i++) {
             handleDialog();
 
