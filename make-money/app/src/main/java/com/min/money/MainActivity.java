@@ -87,6 +87,24 @@ public class MainActivity extends AppCompatActivity {
         AppUtils.installApp(destFile.getAbsolutePath());
     }
 
+    @OnClick(R.id.btn_install_zhongqingkandian)
+    void installZhongQingKanDian() {
+        ToastUtils.showShort("准备安装中....");
+        File destFile = new File(this.getExternalCacheDir(), "zhongqingkandian.apk");
+        FileUtil.copyAssetsFileToStorage(this, "zhongqingkandian.apk", destFile.getAbsolutePath());
+        LogUtils.d("copy zhongqingkandian apk success :" + destFile.getAbsolutePath());
+        AppUtils.installApp(destFile.getAbsolutePath());
+    }
+
+    @OnClick(R.id.btn_install_kuaikandian)
+    void installKuaiKanDian() {
+        ToastUtils.showShort("准备安装中....");
+        File destFile = new File(this.getExternalCacheDir(), "kuaikandian.apk");
+        FileUtil.copyAssetsFileToStorage(this, "kuaikandian.apk", destFile.getAbsolutePath());
+        LogUtils.d("copy kuaikandian apk success :" + destFile.getAbsolutePath());
+        AppUtils.installApp(destFile.getAbsolutePath());
+    }
+
     @OnClick(R.id.btn_install_jukandian)
     void installJuKanDian() {
         ToastUtils.showShort("准备安装中....");

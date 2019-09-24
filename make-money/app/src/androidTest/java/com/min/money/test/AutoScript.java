@@ -14,6 +14,7 @@ import com.min.money.test.script.QuTouTiao;
 import com.min.money.test.script.ShuaBao;
 import com.min.money.test.script.WeiLiKanKan;
 import com.min.money.test.script.XiangKan;
+import com.min.money.test.script.ZhongQingKanDian;
 import com.min.money.test.util.Helper;
 
 import org.junit.After;
@@ -35,17 +36,18 @@ public class AutoScript {
 
     @Test
     public void startAutoScript() {
-        while (true) {
-            BaseAuto.start(new MaYiTouTiao());
-            BaseAuto.start(new JuKanDian());
-            BaseAuto.start(new XiangKan());
-            BaseAuto.start(new QuTouTiao());
-            BaseAuto.start(new WeiLiKanKan());
-            BaseAuto.start(new ShuaBao());
-            BaseAuto.start(new DongFangTouTiao());
-            BaseAuto.start(new HuiTouTiao());
-            Helper.sleep(5000, 8000);
-        }
+//        while (true) {
+        BaseAuto.start(new ZhongQingKanDian());
+//            BaseAuto.start(new MaYiTouTiao());
+//            BaseAuto.start(new JuKanDian());
+//            BaseAuto.start(new XiangKan());
+//            BaseAuto.start(new QuTouTiao());
+//            BaseAuto.start(new WeiLiKanKan());
+//            BaseAuto.start(new ShuaBao());
+//            BaseAuto.start(new DongFangTouTiao());
+//            BaseAuto.start(new HuiTouTiao());
+//            Helper.sleep(5000, 8000);
+//        }
     }
 
     @After
