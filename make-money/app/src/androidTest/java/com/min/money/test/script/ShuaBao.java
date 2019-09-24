@@ -23,7 +23,7 @@ public class ShuaBao extends BaseAuto {
             if (Helper.click(By.text("首页"))) {
                 LogUtils.i("进入首页页面");
                 mainPage();
-            }else {
+            } else {
                 Helper.pressBack();
             }
             if (Helper.click(By.text("我"))) {
@@ -105,8 +105,13 @@ public class ShuaBao extends BaseAuto {
             Helper.click(575f / ScreenUtils.getScreenWidth(), 1275f / ScreenUtils.getScreenHeight());
             if (!Helper.hasObject(By.res("com.jm.video:id/tabLayout"))) {
                 UiObject2 tempObj = null;
+                int i = 0;
                 while ((tempObj = Helper.findObject(By.res("com.jm.video:id/tt_video_ad_close"), 10 * 1000)) == null) {
+                    if (i >= 6) {
+                        break;
+                    }
                     Helper.readVideoShort();
+                    i++;
                 }
                 tempObj.click();
                 handleDialog();

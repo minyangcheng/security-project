@@ -58,7 +58,7 @@ public abstract class BaseAuto {
             mNowCoin = recordCoin(); // 获取当前coin值
             mWorkCoin = calculateWorkCoin(); //计算此次工作生产出的coin
             SPStaticUtils.put(mPackageName + "-coin", mNowCoin); //记录当前coin到文件中保存
-//            backAppToHome();
+            backAppToHome();
         } catch (Exception e) {
             LogUtils.e(e);
         }

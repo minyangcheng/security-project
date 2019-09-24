@@ -225,7 +225,7 @@ public class Helper {
     public static void slideHorizontal(float start, float end) {
         int width = mDevice.getDisplayWidth();
         int height = mDevice.getDisplayHeight();
-        mDevice.swipe((int) (width * start), height / 2, (int) (width * end), height / 2, 100);
+        mDevice.swipe((int) (width * start), height / 2, (int) (width * end), height / 2, 50);
         sleep(OPERATE_SLIDE_MIN_WAIT_TIME, OPERATE_SLIDE_MAX_WAIT_TIME);
         LogUtils.i("operate :  slideHorizontal");
     }
@@ -237,7 +237,7 @@ public class Helper {
     public static void slideVertical(float start, float end) {
         int width = mDevice.getDisplayWidth();
         int height = mDevice.getDisplayHeight();
-        mDevice.swipe(width / 2, (int) (height * start), width / 2, (int) (height * end), 100);
+        mDevice.swipe(width / 2, (int) (height * start), width / 2, (int) (height * end), 50);
         sleep(OPERATE_SLIDE_MIN_WAIT_TIME, OPERATE_SLIDE_MAX_WAIT_TIME);
         LogUtils.i("operate :  slideVertical");
     }

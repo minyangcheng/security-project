@@ -73,7 +73,7 @@ public class MaYiTouTiao extends BaseAuto {
     }
 
     public void newsPage() {
-        int step = Helper.getRandomInRange(mMinCycleValue, mMaxCycleValue);
+        int step = Helper.getRandomInRange(2, 2);
         for (int i = 0; i < step; i++) {
             handleDialog();
 
